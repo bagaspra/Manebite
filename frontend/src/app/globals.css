@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --border: #E8E8E0;
+  --text-primary: #1A1A1A;
+  --text-secondary: #6B6B6B;
+  --accent: #C41E3A;
+  --accent-hover: #A01830;
+  --success: #2D6A4F;
+  --error: #C41E3A;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+}
+
+@layer base {
+  body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-plus-jakarta), 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-noto-serif-jp), 'Noto Serif JP', serif;
+  }
+}
