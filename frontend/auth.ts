@@ -8,6 +8,7 @@ import Credentials from "next-auth/providers/credentials";
 const API_URL = process.env.API_URL || "http://backend:8000";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
