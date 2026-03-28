@@ -86,7 +86,7 @@ function FinishModal({ completedCount, total, onPracticeAgain, videoId }: {
             style={{ background: C.accent }}>
             Practice Again
           </button>
-          <Link href="/dashboard" className="block w-full rounded border py-2.5 text-center text-sm font-semibold transition-colors"
+          <Link href="/tools/shadowing" className="block w-full rounded border py-2.5 text-center text-sm font-semibold transition-colors"
             style={{ borderColor: C.border, color: C.text }}>
             Back to Dashboard
           </Link>
@@ -106,6 +106,9 @@ function Toast({ message }: { message: string }) {
   );
 }
 
+// ─── Play mode ────────────────────────────────────────────────────────────────
+type PlayMode = "loop" | "follow" | "step";
+
 // ─── Main component ───────────────────────────────────────────────────────────
 type Props = { video: VideoDetail; userId?: string };
 
@@ -113,7 +116,7 @@ export default function ShadowingSession({ video, userId }: Props) {
   const sentences = video.sentences;
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLooping, setIsLooping] = useState(true);
+  const [playMode, setPlayMode] = useState<PlayMode>("loop");
   const [showRomaji, setShowRomaji] = useState(true);
   const [showVideo, setShowVideo] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -132,12 +135,12 @@ export default function ShadowingSession({ video, userId }: Props) {
   const ytPlayer      = useRef<YT.Player | null>(null);
   const loopInterval  = useRef<ReturnType<typeof setInterval> | null>(null);
   const currentIndexRef = useRef(currentIndex);
-  const isLoopingRef    = useRef(isLooping);
+  const playModeRef     = useRef<PlayMode>(playMode);
   const replayCount     = useRef(0);
   const activeNavRef    = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
-  useEffect(() => { isLoopingRef.current = isLooping; }, [isLooping]);
+  useEffect(() => { playModeRef.current = playMode; }, [playMode]);
   useEffect(() => { activeNavRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" }); }, [currentIndex]);
 
   // Close popup when sentence changes
@@ -193,24 +196,47 @@ export default function ShadowingSession({ video, userId }: Props) {
     return () => { if (loopInterval.current) clearInterval(loopInterval.current); ytPlayer.current?.destroy(); };
   }, [initPlayer]);
 
-  // Loop
+  // Playback mode interval (loop / follow / step)
   useEffect(() => {
     if (loopInterval.current) clearInterval(loopInterval.current);
-    if (!playerReady || !isLooping) return;
+    if (!playerReady) return;
     loopInterval.current = setInterval(() => {
       const player = ytPlayer.current;
+      const mode = playModeRef.current;
+      if (!player) return;
+      const currentTime = player.getCurrentTime();
       const sentence = sentences[currentIndexRef.current];
-      if (!player || !sentence) return;
-      if (player.getCurrentTime() >= sentence.end_time) {
-        replayCount.current += 1;
-        player.seekTo(sentence.start_time, true);
-        player.playVideo();
-        if (userId && replayCount.current % 3 === 0)
-          updateProgress(video.id, { sentence_id: sentence.id, replays: replayCount.current, completed: false }, userId).catch(() => {});
+
+      if (mode === "loop") {
+        if (!sentence) return;
+        if (currentTime >= sentence.end_time) {
+          replayCount.current += 1;
+          player.seekTo(sentence.start_time, true);
+          player.playVideo();
+          if (userId && replayCount.current % 3 === 0)
+            updateProgress(video.id, { sentence_id: sentence.id, replays: replayCount.current, completed: false }, userId).catch(() => {});
+        }
+      } else if (mode === "follow") {
+        console.log('[Follow] currentTime:', currentTime, 'currentIndex:', currentIndexRef.current); // DEBUG
+        // Find the last sentence whose start_time has been reached — robust against gaps
+        let found = 0;
+        for (let i = sentences.length - 1; i >= 0; i--) {
+          if (currentTime >= sentences[i].start_time) { found = i; break; }
+        }
+        if (found !== currentIndexRef.current) {
+          console.log('[Follow] updating index:', found); // DEBUG
+          currentIndexRef.current = found;
+          setCurrentIndex(found);
+        }
+      } else if (mode === "step") {
+        if (!sentence) return;
+        if (currentTime >= sentence.end_time - 0.1) {
+          player.pauseVideo();
+        }
       }
-    }, 250);
+    }, playMode === "step" ? 100 : 250);
     return () => { if (loopInterval.current) clearInterval(loopInterval.current); };
-  }, [currentIndex, isLooping, playerReady, sentences, userId, video.id]);
+  }, [currentIndex, playMode, playerReady, sentences, userId, video.id]);
 
   const playCurrent = useCallback((index: number) => {
     const player = ytPlayer.current;
@@ -238,6 +264,7 @@ export default function ShadowingSession({ video, userId }: Props) {
       if (prev >= sentences.length - 1) return prev;
       saveProgress(prev);
       const next = prev + 1;
+      currentIndexRef.current = next;
       setSentenceVisible(false);
       replayCount.current = 0;
       setTimeout(() => { setSentenceVisible(true); playCurrent(next); }, 150);
@@ -248,6 +275,7 @@ export default function ShadowingSession({ video, userId }: Props) {
   const goToPrev = useCallback(() => {
     setCurrentIndex((prev) => {
       const next = Math.max(prev - 1, 0);
+      currentIndexRef.current = next;
       setSentenceVisible(false);
       replayCount.current = 0;
       setTimeout(() => { setSentenceVisible(true); playCurrent(next); }, 150);
@@ -277,7 +305,7 @@ export default function ShadowingSession({ video, userId }: Props) {
         case " ": e.preventDefault(); setPopupWord(null); togglePlay(); break;
         case "n": case "ArrowRight": setPopupWord(null); goToNext(); break;
         case "p": case "ArrowLeft": setPopupWord(null); goToPrev(); break;
-        case "l": setIsLooping((v) => !v); break;
+        case "l": setPlayMode((m) => m === "loop" ? "follow" : m === "follow" ? "step" : "loop"); break;
         case "r": setShowRomaji((v) => !v); break;
       }
     }
@@ -371,7 +399,7 @@ export default function ShadowingSession({ video, userId }: Props) {
           {/* Row 1: back + title + toggles */}
           <div className="flex items-center gap-3 px-4 py-2.5">
             <Link
-              href={`/videos/${video.id}`}
+              href={`/tools/shadowing/videos/${video.id}`}
               className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded text-sm transition-opacity hover:opacity-70"
               style={{ background: C.panel, color: C.text, border: `1px solid ${C.border}` }}
               aria-label="Back"
@@ -389,7 +417,12 @@ export default function ShadowingSession({ video, userId }: Props) {
               <ToggleBtn active={showVideo} onClick={() => setShowVideo((v) => !v)}>
                 {showVideo ? "Video" : "Audio"}
               </ToggleBtn>
-              <ToggleBtn active={isLooping} onClick={() => setIsLooping((v) => !v)}>Loop</ToggleBtn>
+              <ToggleBtn
+                active={playMode === "loop"}
+                onClick={() => setPlayMode((m) => m === "loop" ? "follow" : m === "follow" ? "step" : "loop")}
+              >
+                {playMode === "loop" ? "Loop ↺" : playMode === "follow" ? "Follow →" : "Step ⏸"}
+              </ToggleBtn>
               <ToggleBtn active={showRomaji} onClick={() => setShowRomaji((v) => !v)}>Rōmaji</ToggleBtn>
             </div>
           </div>
@@ -436,6 +469,7 @@ export default function ShadowingSession({ video, userId }: Props) {
                     key={s.id}
                     ref={isActive ? activeNavRef : null}
                     onClick={() => {
+                      currentIndexRef.current = i;
                       setSentenceVisible(false);
                       replayCount.current = 0;
                       setTimeout(() => { setSentenceVisible(true); setCurrentIndex(i); playCurrent(i); }, 150);
@@ -585,7 +619,7 @@ export default function ShadowingSession({ video, userId }: Props) {
               </div>
 
               <p className="text-xs" style={{ color: C.muted }}>
-                Space · N next · P prev · L loop · R rōmaji
+                Space · N next · P prev · L mode · R rōmaji
               </p>
             </div>
 

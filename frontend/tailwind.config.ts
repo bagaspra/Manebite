@@ -11,10 +11,19 @@ const config: Config = {
       fontFamily: {
         serif: ["Noto Serif JP", "Georgia", "serif"],
         sans: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
+        "noto-sans-jp": ["Noto Sans JP", "sans-serif"],
       },
       colors: {
-        accent: "#C41E3A",
-        "accent-hover": "#A01830",
+        // CSS var tokens — keep existing Shadowing UI working
+        accent: "var(--accent)",
+        "accent-hover": "var(--accent-hover)",
+        surface: "var(--surface)",
+        "text-primary": "var(--text-primary)",
+        "text-secondary": "var(--text-secondary)",
+        "app-bg": "var(--bg)",
+        "app-border": "var(--border)",
+        "app-success": "var(--success)",
+        "app-error": "var(--error)",
       },
     },
   },

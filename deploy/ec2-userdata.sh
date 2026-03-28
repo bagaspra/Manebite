@@ -23,7 +23,7 @@ pip install yt-dlp
 apt-get install -y nginx
 
 # ── 7. Clone repo ─────────────────────────────────────────────────────────────
-git clone https://github.com/YOUR_USERNAME/shadowing-queue.git /app
+git clone https://github.com/bagaspra/Manebite.git /app
 cd /app
 
 # ── 8. Backend setup ──────────────────────────────────────────────────────────

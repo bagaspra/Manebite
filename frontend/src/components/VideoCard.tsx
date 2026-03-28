@@ -52,7 +52,7 @@ export default function VideoCard({ video, onDelete }: Props) {
         {/* Footer actions */}
         <div className="flex items-center gap-2">
           <Link
-            href={`/videos/${video.id}`}
+            href={`/tools/shadowing/videos/${video.id}`}
             className="flex-1 rounded py-1.5 text-center text-xs font-semibold text-white transition-colors"
             style={{ background: "var(--accent)" }}
             onMouseOver={(e) =>

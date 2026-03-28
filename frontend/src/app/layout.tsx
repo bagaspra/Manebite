@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Serif_JP, Plus_Jakarta_Sans } from "next/font/google";
+import { Noto_Serif_JP, Noto_Sans_JP, Plus_Jakarta_Sans } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
@@ -11,15 +11,22 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 const notoSerifJP = Noto_Serif_JP({
-  weight: ["400", "700"],
+  weight: ["400", "500"],
   subsets: ["latin"],
   variable: "--font-noto-serif-jp",
   display: "swap",
 });
 
+const notoSansJP = Noto_Sans_JP({
+  weight: ["400", "500"],
+  subsets: ["latin"],
+  variable: "--font-noto-sans-jp",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Shadowing Queue",
-  description: "Learn Japanese through shadowing",
+  title: "Manebite",
+  description: "A focused set of tools for learning Japanese the way native speakers use it.",
 };
 
 export default function RootLayout({
@@ -28,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja" className={`${plusJakarta.variable} ${notoSerifJP.variable}`}>
+    <html lang="ja" className={`${plusJakarta.variable} ${notoSerifJP.variable} ${notoSansJP.variable}`}>
       <body>
         <SessionProvider>
           <Navbar />

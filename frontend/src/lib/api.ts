@@ -124,4 +124,67 @@ export function getSessionProgress(videoId: number, userId: string): Promise<Ses
   });
 }
 
+// ─── Keigo Translator types ───────────────────────────────────────────────────
+
+export type KeigoRequest = {
+  text: string;
+  input_mode: "en" | "ja";
+  target_level?: "business" | "polite" | "very_formal";
+};
+
+export type KeigoResult = {
+  output_ja: string;
+  explanation: string;
+  levels_used: string[];
+  input_mode: string;
+};
+
+export type KeigoHistoryItem = {
+  id: number;
+  input_text: string;
+  input_mode: string;
+  output_ja: string;
+  explanation: string | null;
+  levels_used: string[];
+  created_at: string;
+};
+
+export type LocalKeigoHistoryItem = Omit<KeigoHistoryItem, "id" | "created_at">;
+
+// ─── Keigo API functions ──────────────────────────────────────────────────────
+
+export function translateKeigo(data: KeigoRequest, userId?: string): Promise<KeigoResult> {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (userId) headers["X-User-Id"] = userId;
+  return apiFetch<KeigoResult>("/keigo/translate", {
+    method: "POST",
+    headers,
+    body: JSON.stringify(data),
+  });
+}
+
+export function getKeigoHistory(userId: string): Promise<KeigoHistoryItem[]> {
+  return apiFetch<KeigoHistoryItem[]>("/keigo/history", {
+    headers: { "X-User-Id": userId },
+  });
+}
+
+export function deleteKeigoHistoryItem(id: number, userId: string): Promise<void> {
+  return apiFetch<void>(`/keigo/history/${id}`, {
+    method: "DELETE",
+    headers: { "X-User-Id": userId },
+  });
+}
+
+export function importKeigoHistory(
+  items: LocalKeigoHistoryItem[],
+  userId: string
+): Promise<void> {
+  return apiFetch<void>("/keigo/history/import", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-User-Id": userId },
+    body: JSON.stringify({ items }),
+  });
+}
+
 export { apiFetch, API_URL };

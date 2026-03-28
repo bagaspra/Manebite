@@ -8,7 +8,7 @@ import { signIn } from "next-auth/react";
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/dashboard";
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/tools/shadowing";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,7 +52,7 @@ function LoginForm() {
         Sign In
       </h1>
       <p className="mb-8 text-sm" style={{ color: "var(--text-secondary)" }}>
-        Welcome back to Shadowing Queue
+        Welcome back to Manebite
       </p>
 
       {/* Google */}
