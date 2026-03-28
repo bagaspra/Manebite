@@ -44,6 +44,7 @@ export type Video = {
   submitted_by: string | null;
   created_at: string | null;
   sentence_count: number;
+  difficulty?: string | null;
 };
 
 export type VideoDetail = Video & { sentences: Sentence[] };
