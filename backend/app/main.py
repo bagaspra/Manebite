@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.database import engine, Base
-from app.routers import videos, session, auth, proxy, keigo
+from app.routers import videos, session, auth, proxy, keigo, hongocut
 
 # Import all models so Base.metadata knows about them
 import app.models.video  # noqa: F401
@@ -13,6 +13,7 @@ import app.models.sentence  # noqa: F401
 import app.models.user_progress  # noqa: F401
 import app.models.user  # noqa: F401
 import app.models.keigo_history  # noqa: F401
+import app.models.hc_word  # noqa: F401
 
 
 @asynccontextmanager
@@ -44,6 +45,7 @@ app.include_router(videos.router)
 app.include_router(session.router)
 app.include_router(proxy.router)
 app.include_router(keigo.router, prefix="/keigo")
+app.include_router(hongocut.router)
 
 
 @app.get("/health")

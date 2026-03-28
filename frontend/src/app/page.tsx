@@ -32,6 +32,18 @@ function ArrowIcon() {
   );
 }
 
+function ScissorsIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="6" cy="6" r="3" />
+      <circle cx="6" cy="18" r="3" />
+      <line x1="20" y1="4" x2="8.12" y2="15.88" />
+      <line x1="14.47" y1="14.48" x2="20" y2="20" />
+      <line x1="8.12" y1="8.12" x2="12" y2="12" />
+    </svg>
+  );
+}
+
 const tools = [
   {
     key: "shadowing",
@@ -58,21 +70,16 @@ const tools = [
     Icon: LinesIcon,
   },
   {
-    key: "grammar",
-    name: "Grammar Matcher",
-    desc: "Match sentences to the grammar patterns they use",
-    href: "#",
-    active: false,
-    iconBg: "bg-gray-100",
-    iconColor: "text-gray-400",
-    badge: "Coming soon",
-    badgeClass: "bg-gray-100 text-gray-400 border border-gray-200",
-    Icon: () => (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="2" />
-        <path d="M3 9h18M9 21V9" />
-      </svg>
-    ),
+    key: "hongocut",
+    name: "HongoCut",
+    desc: "Search any Japanese word and watch real clips of native speakers using it",
+    href: "/tools/hongocut",
+    active: true,
+    iconBg: "bg-amber-50",
+    iconColor: "text-amber-600",
+    badge: "New",
+    badgeClass: "bg-amber-50 text-amber-700 border border-amber-200",
+    Icon: ScissorsIcon,
   },
   {
     key: "more",
@@ -107,7 +114,7 @@ export default function HomePage() {
           Learn Japanese the way<br />native speakers use it
         </h1>
         <p className="mt-2 text-xs tracking-widest text-gray-400">
-          shadowing · keigo · grammar
+          shadowing · keigo · hongocut
         </p>
         <p className="mt-4 text-sm leading-relaxed text-gray-500">
           A focused set of tools to build real Japanese fluency —<br className="hidden sm:block" />

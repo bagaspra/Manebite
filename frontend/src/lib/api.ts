@@ -187,4 +187,75 @@ export function importKeigoHistory(
   });
 }
 
+// ─── HongoCut types ───────────────────────────────────────────────────────────
+
+export type HcSearchResult = {
+  word_id: number;
+  surface: string;
+  base_form: string | null;
+  reading: string | null;
+  sentence_id: number;
+  text_ja: string;
+  text_romaji: string | null;
+  start_time: number;
+  end_time: number;
+  video_id: number;
+  youtube_id: string;
+  title: string | null;
+  channel: string | null;
+};
+
+export type HcVideo = {
+  id: number;
+  youtube_id: string;
+  title: string | null;
+  channel: string | null;
+  word_count: number;
+  sentence_count: number;
+  created_at: string;
+};
+
+export type HcSuggestion = {
+  surface: string;
+  base_form: string | null;
+  reading: string | null;
+};
+
+// ─── HongoCut API functions ───────────────────────────────────────────────────
+
+export function hcSearch(q: string, skip = 0, limit = 20): Promise<HcSearchResult[]> {
+  return apiFetch<HcSearchResult[]>(
+    `/hc/search?q=${encodeURIComponent(q)}&skip=${skip}&limit=${limit}`,
+  );
+}
+
+export function hcSearchSuggestions(q: string): Promise<HcSuggestion[]> {
+  return apiFetch<HcSuggestion[]>(`/hc/search/suggestions?q=${encodeURIComponent(q)}`);
+}
+
+export function hcGetPopularWords(): Promise<HcSuggestion[]> {
+  return apiFetch<HcSuggestion[]>("/hc/words/popular");
+}
+
+export function hcSubmitVideo(youtube_url: string, userId: string): Promise<HcVideo> {
+  return apiFetch<HcVideo>("/hc/videos", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-User-Id": userId },
+    body: JSON.stringify({ youtube_url }),
+  });
+}
+
+export function hcGetVideos(userId: string): Promise<HcVideo[]> {
+  return apiFetch<HcVideo[]>("/hc/videos", {
+    headers: { "X-User-Id": userId },
+  });
+}
+
+export async function hcDeleteVideo(id: number, userId: string): Promise<void> {
+  await apiFetch<unknown>(`/hc/videos/${id}`, {
+    method: "DELETE",
+    headers: { "X-User-Id": userId },
+  });
+}
+
 export { apiFetch, API_URL };

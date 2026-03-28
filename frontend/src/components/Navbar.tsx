@@ -12,7 +12,8 @@ export default function Navbar() {
 
   const isShadowing = pathname.startsWith("/tools/shadowing");
   const isKeigo = pathname.startsWith("/tools/keigo");
-  const isTool = isShadowing || isKeigo;
+  const isHongocut = pathname.startsWith("/tools/hongocut");
+  const isTool = isShadowing || isKeigo || isHongocut;
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/90 backdrop-blur-md">
@@ -28,6 +29,7 @@ export default function Navbar() {
             </Link>
             {isShadowing && <ToolPill tool="shadowing" />}
             {isKeigo && <ToolPill tool="keigo" />}
+            {isHongocut && <ToolPill tool="hongocut" />}
           </div>
         ) : (
           <Link href="/" className="flex items-center gap-2">
