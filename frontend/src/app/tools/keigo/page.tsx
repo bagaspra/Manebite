@@ -294,7 +294,7 @@ export default function KeigoPage() {
               const key = "id" in item ? item.id : i;
               return (
                 <div
-                  key={key}
+                  key={key as string}
                   className="group flex cursor-pointer items-start justify-between rounded-lg border border-gray-100 px-4 py-3 transition-colors hover:border-gray-200 hover:bg-gray-50"
                   onClick={() => loadFromHistory(item)}
                 >
