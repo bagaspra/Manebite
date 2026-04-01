@@ -98,7 +98,7 @@ async def submit_video(
         channel=metadata.get("channel"),
         language="ja",
         submitted_by=x_user_id,
-        is_public=False,  # default private
+        is_public=body.is_public,
     )
     db.add(video)
     await db.flush()

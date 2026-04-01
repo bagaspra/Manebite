@@ -57,13 +57,13 @@ export type SubmitVideoResponse = {
 
 // ─── API functions ────────────────────────────────────────────────────────────
 
-export function submitVideo(youtube_url: string, userId?: string): Promise<SubmitVideoResponse> {
+export function submitVideo(youtube_url: string, userId?: string, isPublic: boolean = false): Promise<SubmitVideoResponse> {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (userId) headers["X-User-Id"] = userId;
   return apiFetch<SubmitVideoResponse>("/videos", {
     method: "POST",
     headers,
-    body: JSON.stringify({ youtube_url }),
+    body: JSON.stringify({ youtube_url, is_public: isPublic }),
   });
 }
 
@@ -85,8 +85,11 @@ export function getVideoDetail(id: number): Promise<VideoDetail> {
   return apiFetch<VideoDetail>(`/videos/${id}`);
 }
 
-export async function deleteVideo(id: number): Promise<void> {
-  await apiFetch<unknown>(`/videos/${id}`, { method: "DELETE" });
+export async function deleteVideo(id: number, userId: string): Promise<void> {
+  await apiFetch<unknown>(`/videos/${id}`, { 
+    method: "DELETE",
+    headers: { "X-User-Id": userId }
+  });
 }
 
 // ─── Progress types ───────────────────────────────────────────────────────────
@@ -255,6 +258,174 @@ export function hcGetVideos(userId: string): Promise<HcVideo[]> {
 export async function hcDeleteVideo(id: number, userId: string): Promise<void> {
   await apiFetch<unknown>(`/hc/videos/${id}`, {
     method: "DELETE",
+    headers: { "X-User-Id": userId },
+  });
+}
+
+// ─── GoiPack types ────────────────────────────────────────────────────────────
+
+export type GoiCategory = {
+  id: number;
+  name_ja: string;
+  name_en: string;
+  name_id: string;
+  icon: string;
+  sort_order: number;
+  pack_count?: number;
+};
+
+export type GoiPack = {
+  id: number;
+  category_id: number;
+  name_ja: string;
+  name_en: string;
+  name_id: string;
+  description: string | null;
+  word_count: number;
+  is_published: boolean;
+  created_at: string | null;
+  category_name_ja?: string;
+  category_name_en?: string;
+};
+
+export type GoiWord = {
+  id: number;
+  surface: string;
+  reading: string;
+  jlpt_level: number;
+  meaning_en: string;
+  meaning_id: string;
+  examples_ja: string[];
+  examples_ja_ruby: string[] | null;
+  examples_en: string[];
+  examples_id: string[];
+  sort_order: number;
+};
+
+export type GoiPackDetail = {
+  pack: GoiPack;
+  words: GoiWord[];
+};
+
+export type GoiWordInput = Omit<GoiWord, "id"> & { examples_ja_ruby?: string[] | null };
+
+export type GoiPackUpdateBody = {
+  name_ja: string;
+  name_en: string;
+  name_id: string;
+  description?: string | null;
+  words: GoiWordInput[];
+};
+
+// ─── GoiPack API functions ────────────────────────────────────────────────────
+
+export function gpGetCategories(): Promise<GoiCategory[]> {
+  return apiFetch<GoiCategory[]>("/gp/categories");
+}
+
+export function gpGetPacksInCategory(categoryId: number): Promise<GoiPack[]> {
+  return apiFetch<GoiPack[]>(`/gp/categories/${categoryId}/packs`);
+}
+
+export function gpGetPackDetail(packId: number, userId?: string): Promise<GoiPackDetail> {
+  const headers: Record<string, string> = {};
+  if (userId) headers["X-User-Id"] = userId;
+  return apiFetch<GoiPackDetail>(`/gp/packs/${packId}`, { headers });
+}
+
+// Admin
+export function gpAdminGetCategories(userId: string): Promise<GoiCategory[]> {
+  return apiFetch<GoiCategory[]>("/gp/admin/categories", {
+    headers: { "X-User-Id": userId },
+  });
+}
+
+export function gpAdminCreateCategory(
+  body: { name_ja: string; name_en: string; name_id: string; icon: string; sort_order?: number },
+  userId: string,
+): Promise<GoiCategory> {
+  return apiFetch<GoiCategory>("/gp/admin/categories", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-User-Id": userId },
+    body: JSON.stringify(body),
+  });
+}
+
+export function gpAdminUpdateCategory(
+  id: number,
+  body: { name_ja: string; name_en: string; name_id: string; icon: string; sort_order?: number },
+  userId: string,
+): Promise<GoiCategory> {
+  return apiFetch<GoiCategory>(`/gp/admin/categories/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", "X-User-Id": userId },
+    body: JSON.stringify(body),
+  });
+}
+
+export async function gpAdminDeleteCategory(id: number, userId: string): Promise<void> {
+  await apiFetch<unknown>(`/gp/admin/categories/${id}`, {
+    method: "DELETE",
+    headers: { "X-User-Id": userId },
+  });
+}
+
+export function gpAdminGetPacks(userId: string, categoryId?: number): Promise<GoiPack[]> {
+  const qs = categoryId != null ? `?category_id=${categoryId}` : "";
+  return apiFetch<GoiPack[]>(`/gp/admin/packs${qs}`, {
+    headers: { "X-User-Id": userId },
+  });
+}
+
+export function gpAdminGetPack(packId: number, userId: string): Promise<GoiPackDetail> {
+  return apiFetch<GoiPackDetail>(`/gp/admin/packs/${packId}`, {
+    headers: { "X-User-Id": userId },
+  });
+}
+
+export function gpAdminCreatePack(
+  body: { category_id: number; name_ja: string; name_en: string; name_id: string; description?: string },
+  userId: string,
+): Promise<GoiPack> {
+  return apiFetch<GoiPack>("/gp/admin/packs", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-User-Id": userId },
+    body: JSON.stringify(body),
+  });
+}
+
+export function gpAdminGenerateWords(packId: number, userId: string): Promise<{ words: GoiWordInput[] }> {
+  return apiFetch<{ words: GoiWordInput[] }>(`/gp/admin/packs/${packId}/generate`, {
+    method: "POST",
+    headers: { "X-User-Id": userId },
+  });
+}
+
+export function gpAdminUpdatePack(packId: number, body: GoiPackUpdateBody, userId: string): Promise<GoiPack> {
+  return apiFetch<GoiPack>(`/gp/admin/packs/${packId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", "X-User-Id": userId },
+    body: JSON.stringify(body),
+  });
+}
+
+export function gpAdminPublishPack(packId: number, userId: string): Promise<GoiPack> {
+  return apiFetch<GoiPack>(`/gp/admin/packs/${packId}/publish`, {
+    method: "POST",
+    headers: { "X-User-Id": userId },
+  });
+}
+
+export async function gpAdminDeletePack(packId: number, userId: string): Promise<void> {
+  await apiFetch<unknown>(`/gp/admin/packs/${packId}`, {
+    method: "DELETE",
+    headers: { "X-User-Id": userId },
+  });
+}
+
+export function gpAdminGenerateRuby(packId: number, userId: string): Promise<GoiPack> {
+  return apiFetch<GoiPack>(`/gp/admin/packs/${packId}/generate-ruby`, {
+    method: "POST",
     headers: { "X-User-Id": userId },
   });
 }

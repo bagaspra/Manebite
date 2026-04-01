@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     @property
     def allowed_origins(self) -> list[str]:
         origins = [x.strip() for x in self.ALLOWED_ORIGINS.split(",") if x.strip()]
-        return origins if origins else [self.FRONTEND_URL]
+        return origins if origins else [self.FRONTEND_URL, "http://127.0.0.1:3000"]
 
     class Config:
         env_file = ".env"

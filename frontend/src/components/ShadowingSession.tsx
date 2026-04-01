@@ -6,6 +6,7 @@ import { getSessionProgress, updateProgress, type Progress, type VideoDetail } f
 import { useJishoLookup } from "@/hooks/useJishoLookup";
 import { SelectableSentence } from "./SelectableSentence";
 import WordPopup from "./WordPopup";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // ─── Dark-theme tokens (scoped to session page) ───────────────────────────────
 const C = {
@@ -71,24 +72,25 @@ function ToggleBtn({ active, onClick, children }: { active: boolean; onClick: ()
 function FinishModal({ completedCount, total, onPracticeAgain, videoId }: {
   completedCount: number; total: number; onPracticeAgain: () => void; videoId: number;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(6px)" }}>
       <div className="w-full max-w-sm rounded-xl p-8 text-center shadow-2xl"
         style={{ background: C.surface, border: `1px solid ${C.border}` }}>
         <div className="mb-4 text-5xl">🎉</div>
-        <h2 className="mb-2 text-2xl font-bold" style={{ color: C.text }}>Session Complete!</h2>
+        <h2 className="mb-2 text-2xl font-bold" style={{ color: C.text }}>{t("sess_complete")}</h2>
         <p className="mb-6 text-sm" style={{ color: C.muted }}>
-          You shadowed <strong style={{ color: C.text }}>{completedCount}</strong> of <strong style={{ color: C.text }}>{total}</strong> sentences.
+          {t("sess_shadowed")} <strong style={{ color: C.text }}>{completedCount}</strong> {t("sess_of")} <strong style={{ color: C.text }}>{total}</strong> {t("sess_sentences_label")}
         </p>
         <div className="flex flex-col gap-3">
           <button onClick={onPracticeAgain} className="w-full rounded py-2.5 text-sm font-semibold text-white"
             style={{ background: C.accent }}>
-            Practice Again
+            {t("sess_practice_again")}
           </button>
           <Link href="/tools/shadowing" className="block w-full rounded border py-2.5 text-center text-sm font-semibold transition-colors"
             style={{ borderColor: C.border, color: C.text }}>
-            Back to Dashboard
+            {t("sess_back_to_shadowing")}
           </Link>
         </div>
       </div>
@@ -113,6 +115,7 @@ type PlayMode = "loop" | "follow" | "step";
 type Props = { video: VideoDetail; userId?: string };
 
 export default function ShadowingSession({ video, userId }: Props) {
+  const { t } = useLanguage();
   const sentences = video.sentences;
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -459,7 +462,7 @@ export default function ShadowingSession({ video, userId }: Props) {
             <div className="sq-nav-wrap" style={{ borderTop: `1px solid ${C.border}` }}>
               <div className="sq-nav">
               <div className="px-4 py-2 text-xs font-semibold uppercase tracking-widest" style={{ color: C.muted }}>
-                All Sentences ({sentences.length})
+                {t("sess_all_sentences")} ({sentences.length})
               </div>
               {sentences.map((s, i) => {
                 const isCompleted = progressMap[s.id]?.completed === true;
@@ -543,7 +546,7 @@ export default function ShadowingSession({ video, userId }: Props) {
                     />
                   </p>
                   <p style={{ fontSize: '11px', opacity: 0.4, marginTop: '0.5rem', color: C.muted }}>
-                    Select a word to look it up
+                    {t("sess_select_word_hint")}
                   </p>
                   <div
                     style={{
@@ -619,7 +622,7 @@ export default function ShadowingSession({ video, userId }: Props) {
               </div>
 
               <p className="text-xs" style={{ color: C.muted }}>
-                Space · N next · P prev · L mode · R rōmaji
+                {t("sess_keyboard_hint")}
               </p>
             </div>
 
@@ -632,14 +635,14 @@ export default function ShadowingSession({ video, userId }: Props) {
               }}
             >
               <p className="mb-1 text-xs font-semibold uppercase tracking-widest" style={{ color: C.muted }}>
-                Now Shadowing
+                {t("sess_now_shadowing")}
               </p>
               <p className="text-sm font-bold" style={{ color: C.text }}>
-                Sentence {currentIndex + 1} of {sentences.length}
+                {t("sess_sentence_of")} {currentIndex + 1} / {sentences.length}
               </p>
               {userId && (
                 <p className="mt-0.5 text-xs font-semibold" style={{ color: C.accent }}>
-                  {completedCount} / {sentences.length} completed
+                  {completedCount} / {sentences.length} {t("sess_completed")}
                 </p>
               )}
             </div>

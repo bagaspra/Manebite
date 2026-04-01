@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
-import { Noto_Serif_JP, Noto_Sans_JP, Plus_Jakarta_Sans } from "next/font/google";
+import { Noto_Serif_JP, Noto_Sans_JP, Plus_Jakarta_Sans, Geist } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import Navbar from "@/components/Navbar";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -35,11 +40,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja" className={`${plusJakarta.variable} ${notoSerifJP.variable} ${notoSansJP.variable}`}>
+    <html lang="ja" className={cn(plusJakarta.variable, notoSerifJP.variable, notoSansJP.variable, "font-sans", geist.variable)}>
       <body>
         <SessionProvider>
-          <Navbar />
-          {children}
+          <LanguageProvider>
+            <Navbar />
+            <Toaster position="top-center" richColors />
+            {children}
+          </LanguageProvider>
         </SessionProvider>
       </body>
     </html>

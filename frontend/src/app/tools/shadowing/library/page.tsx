@@ -2,9 +2,24 @@
 
 import { useEffect, useState } from "react";
 import { getVideos, type Video } from "@/lib/api";
-import VideoCard from "@/components/VideoCard";
+import Link from "next/link";
+import styles from "@/components/GlassUI.module.css";
+import { useLanguage } from "@/contexts/LanguageContext";
+
+function SkeletonCard() {
+  return (
+    <div className={styles.vcard} style={{ height: "240px", padding: 0 }}>
+      <div className="animate-pulse bg-gray-200 h-1/2 w-full" />
+      <div className={`${styles.vbody} p-4`}>
+        <div className="h-3 w-3/4 animate-pulse rounded bg-gray-200 mb-2" />
+        <div className="h-2 w-1/2 animate-pulse rounded bg-gray-200" />
+      </div>
+    </div>
+  );
+}
 
 export default function LibraryPage() {
+  const { t } = useLanguage();
   const [videos, setVideos] = useState<Video[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -24,61 +39,85 @@ export default function LibraryPage() {
     : videos;
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <div className="mb-8">
-        <h1 className="text-2xl font-medium tracking-tight text-text-primary">Public Library</h1>
-        <p className="mt-1 text-sm text-text-secondary">
-          Community-shared Japanese shadowing videos — no sign-in required.
-        </p>
-      </div>
-
-      <div className="mb-8">
-        <input
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by title or channel…"
-          className="w-full max-w-md rounded-md border border-app-border bg-surface px-4 py-2.5 text-sm text-text-primary outline-none focus:border-gray-400"
-        />
-      </div>
-
-      {isLoading ? (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="overflow-hidden rounded-lg border border-app-border bg-surface">
-              <div className="aspect-video animate-pulse bg-gray-100" />
-              <div className="space-y-2 p-4">
-                <div className="h-3 w-3/4 animate-pulse rounded bg-gray-100" />
-                <div className="h-3 w-1/2 animate-pulse rounded bg-gray-100" />
-                <div className="mt-4 h-8 animate-pulse rounded bg-gray-100" />
-              </div>
+    <div className={styles.page}>
+      <div className={styles.mainSection}>
+        {/* Toolbar */}
+        <div className={styles.toolbar}>
+          <div className={styles.toolbarLeft}>
+            <div className={styles.toolIcon}>🌐</div>
+            <div>
+              <div className={styles.toolTitle}>{t("shad_lib_title")}</div>
+              <div className={styles.toolSub}>{t("shad_lib_desc")}</div>
             </div>
-          ))}
-        </div>
-      ) : filtered.length === 0 ? (
-        <div className="py-20 text-center">
-          <p className="text-sm font-medium text-text-primary">
-            {search ? "No videos match your search." : "No public videos yet."}
-          </p>
-          <p className="mt-1 text-sm text-text-secondary">
-            {search
-              ? "Try a different keyword."
-              : "Submit a video and toggle it public to share with the community."}
-          </p>
-        </div>
-      ) : (
-        <>
-          <p className="mb-4 text-xs text-text-secondary">
-            {filtered.length} video{filtered.length !== 1 ? "s" : ""}
-            {search ? ` matching "${search}"` : ""}
-          </p>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((video) => (
-              <VideoCard key={video.id} video={video} />
-            ))}
           </div>
-        </>
-      )}
-    </main>
+          <div className={styles.toolbarRight}>
+            <div className={styles.tabs}>
+              <Link href="/tools/shadowing" className={styles.tab}>{t("shad_my_queue")}</Link>
+              <div className={`${styles.tab} ${styles.tabActive}`}>{t("shad_library")}</div>
+            </div>
+            <input
+              type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={t("shad_lib_search")}
+              className={styles.urlInput}
+              style={{ maxWidth: "200px", padding: "6px 14px", marginLeft: "10px" }}
+            />
+          </div>
+        </div>
+
+        {/* Video Grid */}
+        <div className={styles.videoGrid}>
+          {isLoading ? (
+            [1, 2, 3].map(i => <SkeletonCard key={i} />)
+          ) : filtered.length > 0 ? (
+            filtered.map((video) => (
+              <Link href={`/tools/shadowing/videos/${video.id}`} className={styles.vcard} key={video.id}>
+                <div 
+                  className={styles.vcardThumb} 
+                  style={{ overflow: "hidden", background: "none" }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`https://img.youtube.com/vi/${video.youtube_id}/mqdefault.jpg`}
+                    alt={video.title ?? video.youtube_id}
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                  <div className={styles.playOverlay}>
+                    <div className={styles.playBtn}>▶</div>
+                  </div>
+                </div>
+                <div className={styles.vbody}>
+                  <div className={styles.vtitle} title={video.title || video.youtube_id}>
+                    {video.title ?? video.youtube_id}
+                  </div>
+                  <div className={styles.vchannel}>{video.channel || "Unknown"}</div>
+                  <div className={styles.vstats}>
+                    <div className={styles.vs}>📝 {video.sentence_count} sentences</div>
+                    <div className={styles.vs}>⏱ {Math.floor(video.sentence_count / 12)} min</div>
+                  </div>
+                  <div className={styles.vprog}>
+                    <div className={styles.vpf} style={{ width: "0%" }}></div>
+                  </div>
+                  <div className={styles.vactions}>
+                    <button className={styles.btnS}>Shadow →</button>
+                  </div>
+                </div>
+              </Link>
+            ))
+          ) : (
+            <div className="col-span-full py-20 text-center">
+              <div className="text-4xl mb-4">🔍</div>
+              <p className="text-sm font-bold text-gray-800">
+                {search ? t("shad_lib_no_results") : t("shad_lib_no_videos")}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {search ? t("shad_lib_try_different") : t("shad_lib_share_hint")}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

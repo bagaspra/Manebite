@@ -20,4 +20,4 @@ class Video(Base):
     created_at = Column(TIMESTAMP, server_default=func.now())
 
     sentences = relationship("Sentence", back_populates="video", cascade="all, delete-orphan")
-    user_progresses = relationship("UserProgress", back_populates="video")
+    user_progresses = relationship("UserProgress", back_populates="video", cascade="all, delete-orphan")

@@ -2,196 +2,145 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { hcSubmitVideo, hcGetVideos, hcDeleteVideo, type HcVideo } from "@/lib/api";
-
-const ADMIN_IDS = (process.env.NEXT_PUBLIC_ADMIN_USER_IDS ?? "").split(",").map((s) => s.trim()).filter(Boolean);
-
-function isAdmin(userId?: string | null): boolean {
-  return !!userId && ADMIN_IDS.includes(userId);
-}
+import {
+  hcGetVideos,
+  hcSubmitVideo,
+  hcDeleteVideo,
+  type HcVideo,
+} from "@/lib/api";
+import styles from "@/components/GlassUI.module.css";
+import { AdminLayoutShell } from "@/components/DashboardShell";
 
 export default function HongoCutAdminPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { data: session } = useSession();
   const userId = (session?.user as { id?: string } | undefined)?.id;
 
-  const [url, setUrl] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<{ ok: boolean; msg: string } | null>(null);
   const [videos, setVideos] = useState<HcVideo[]>([]);
-  const [loadingVideos, setLoadingVideos] = useState(false);
-  const [deletingId, setDeletingId] = useState<number | null>(null);
-
-  // Auth guard: redirect if not admin once session resolves
-  useEffect(() => {
-    if (status === "loading") return;
-    if (!isAdmin(userId)) {
-      router.replace("/tools/hongocut");
-    }
-  }, [status, userId, router]);
+  const [url, setUrl] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [loadingList, setLoadingList] = useState(true);
+  const [processStatus, setProcessStatus] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isAdmin(userId)) return;
-    loadVideos();
-  }, [userId]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (userId) loadVideos();
+  }, [userId]);
 
   async function loadVideos() {
     if (!userId) return;
-    setLoadingVideos(true);
+    setLoadingList(true);
     try {
-      const data = await hcGetVideos(userId);
-      setVideos(data);
-    } catch {
-      // silently ignore
+      setVideos(await hcGetVideos(userId));
     } finally {
-      setLoadingVideos(false);
+      setLoadingList(false);
     }
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleProcess(e: React.FormEvent) {
     e.preventDefault();
-    if (!userId || !url.trim()) return;
-    setSubmitting(true);
-    setSubmitStatus(null);
+    if (!userId || !url) return;
+    setIsProcessing(true);
+    setProcessStatus("⏳ Processing video...");
     try {
-      const video = await hcSubmitVideo(url.trim(), userId);
-      setSubmitStatus({
-        ok: true,
-        msg: `Done — ${video.word_count} words from ${video.sentence_count} sentences indexed.`,
-      });
+      await hcSubmitVideo(url, userId);
       setUrl("");
+      setProcessStatus("✅ Video indexed successfully!");
       loadVideos();
     } catch (err) {
-      setSubmitStatus({
-        ok: false,
-        msg: err instanceof Error ? err.message : "Failed to process video.",
-      });
+      setProcessStatus("❌ Failed to process video.");
     } finally {
-      setSubmitting(false);
+      setIsProcessing(false);
+      setTimeout(() => setProcessStatus(null), 5000);
     }
   }
 
   async function handleDelete(video: HcVideo) {
     if (!userId) return;
-    if (!confirm(`Delete "${video.title ?? video.youtube_id}"?\nThis will remove the video and all its HongoCut data.`)) return;
-    setDeletingId(video.id);
+    if (!confirm(`Delete video "${video.title}"?`)) return;
     try {
       await hcDeleteVideo(video.id, userId);
-      setVideos((prev) => prev.filter((v) => v.id !== video.id));
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Delete failed");
-    } finally {
-      setDeletingId(null);
+      setVideos((v) => v.filter((item) => item.id !== video.id));
+    } catch {
+      alert("Failed to delete.");
     }
   }
 
-  // Loading / access check
-  if (status === "loading") {
-    return (
-      <div className="flex min-h-64 items-center justify-center">
-        <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-200 border-t-amber-500" />
-      </div>
-    );
-  }
-
-  if (!isAdmin(userId)) return null;
-
-  return (
-    <main className="mx-auto max-w-3xl px-4 pb-24 pt-10">
-      <div className="mb-8">
-        <p className="mb-1 text-xs tracking-widest text-gray-400">HONGOCUT · ADMIN</p>
-        <h1 className="text-xl font-medium text-gray-900">Video Management</h1>
+  const PageContent = (
+    <div className="animate-fadeUp space-y-10">
+      {/* Header Area */}
+      <div>
+        <h1 className="text-3xl font-bold text-[#1A1A2E] mb-2">Video Management</h1>
+        <p className="text-sm text-gray-500 font-medium">Index and manage YouTube videos for word search</p>
       </div>
 
-      {/* Submit form */}
-      <section className="mb-10 rounded-lg border border-gray-100 p-6">
-        <h2 className="mb-4 text-sm font-medium text-gray-700">Process a new video</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row">
-          <input
-            type="url"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://www.youtube.com/watch?v=..."
-            className="flex-1 rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none transition-colors focus:border-amber-400 focus:ring-2 focus:ring-amber-100"
-            required
-          />
-          <button
-            type="submit"
-            disabled={submitting || !url.trim()}
-            className="rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-80 disabled:opacity-40"
-          >
-            {submitting ? "Processing..." : "Process Video"}
-          </button>
-        </form>
+      {/* Index Form Card */}
+      <div className="p-8 rounded-3xl bg-white/45 backdrop-blur-xl border border-white/80 shadow-sm relative overflow-hidden group">
+        <div className="relative z-10">
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4 px-1">Index New Video</p>
+          <form onSubmit={handleProcess} className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="Masukkan URL YouTube (misal: https://youtu.be/...)"
+              className={`${styles.urlInput} flex-1 shadow-inner !rounded-xl !py-3 !px-5 !text-sm`}
+              required
+            />
+            <button
+              type="submit"
+              disabled={isProcessing}
+              className="px-8 py-3 rounded-xl bg-[#1A1A2E] text-white font-bold text-sm hover:bg-[#2d2d45] transition-all shadow-lg active:scale-95 disabled:opacity-50 whitespace-nowrap"
+            >
+              {isProcessing ? "Processing..." : "✨ Index Video"}
+            </button>
+          </form>
+          {processStatus && (
+            <p className="mt-4 text-xs font-bold animate-fadeUp px-1">{processStatus}</p>
+          )}
+        </div>
+      </div>
 
-        {submitting && (
-          <p className="mt-3 text-xs text-gray-400">
-            Fetching subtitles and tokenizing words — this may take a moment...
-          </p>
-        )}
+      {/* Video Table */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between px-1">
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Indexed Videos ({videos.length})</p>
+        </div>
 
-        {submitStatus && (
-          <p className={`mt-3 text-sm ${submitStatus.ok ? "text-emerald-600" : "text-red-500"}`}>
-            {submitStatus.msg}
-          </p>
-        )}
-      </section>
-
-      {/* Video list */}
-      <section>
-        <h2 className="mb-4 text-sm font-medium text-gray-700">
-          Indexed videos
-          {videos.length > 0 && <span className="ml-2 text-gray-400">({videos.length})</span>}
-        </h2>
-
-        {loadingVideos ? (
-          <div className="flex justify-center py-10">
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-200 border-t-amber-500" />
+        {loadingList ? (
+          <div className="space-y-3">
+            {[1, 2, 3].map(i => <div key={i} className="h-16 w-full rounded-2xl bg-white/30 animate-pulse border border-white/50" />)}
           </div>
         ) : videos.length === 0 ? (
-          <p className="py-8 text-center text-sm text-gray-400">No videos indexed yet.</p>
+          <div className="py-20 text-center bg-white/20 rounded-2xl border border-dashed border-white/50 text-gray-400 font-bold">
+            Belum ada video yang diindeks.
+          </div>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-gray-100">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-gray-400">
-                  <th className="px-4 py-3 font-medium">Video</th>
-                  <th className="px-3 py-3 font-medium text-right">Sentences</th>
-                  <th className="px-3 py-3 font-medium text-right">Words</th>
-                  <th className="px-4 py-3 font-medium text-right">Actions</th>
+          <div className="overflow-hidden rounded-2xl bg-white/45 backdrop-blur-xl border border-white/80 shadow-sm">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-white/30 border-b border-white/60">
+                <tr className="text-[10px] uppercase font-bold text-gray-400 tracking-widest">
+                  <th className="px-6 py-4">Video Info</th>
+                  <th className="px-4 py-4">Status</th>
+                  <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
-                {videos.map((video) => (
-                  <tr key={video.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        {/* Thumbnail */}
-                        <img
-                          src={`https://img.youtube.com/vi/${video.youtube_id}/default.jpg`}
-                          alt=""
-                          className="h-9 w-16 shrink-0 rounded object-cover"
-                        />
-                        <div className="min-w-0">
-                          <p className="truncate font-medium text-gray-900">
-                            {video.title ?? video.youtube_id}
-                          </p>
-                          {video.channel && (
-                            <p className="truncate text-xs text-gray-400">{video.channel}</p>
-                          )}
-                        </div>
-                      </div>
+              <tbody className="divide-y divide-white/40">
+                {videos.map((v) => (
+                  <tr key={v.id} className="group hover:bg-white/40 transition-colors">
+                    <td className="px-6 py-4">
+                      <p className="font-bold text-[#1A1A2E] line-clamp-1">{v.title}</p>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter truncate max-w-[300px]">{v.youtube_id}</p>
                     </td>
-                    <td className="px-3 py-3 text-right text-gray-600">{video.sentence_count}</td>
-                    <td className="px-3 py-3 text-right text-gray-600">{video.word_count}</td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-4">
+                      <span className="inline-flex rounded-full bg-emerald-100/70 border border-emerald-200/50 px-3 py-1 text-[10px] font-bold text-emerald-700 uppercase tracking-wider">
+                        Indexed
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
                       <button
-                        onClick={() => handleDelete(video)}
-                        disabled={deletingId === video.id}
-                        className="rounded border border-red-100 px-3 py-1 text-xs text-red-500 transition-colors hover:bg-red-50 disabled:opacity-40"
+                        onClick={() => handleDelete(v)}
+                        className="rounded-lg border border-red-100 bg-red-50 px-4 py-1.5 text-[11px] font-bold text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm"
                       >
-                        {deletingId === video.id ? "Deleting..." : "Delete"}
+                        Delete
                       </button>
                     </td>
                   </tr>
@@ -200,7 +149,13 @@ export default function HongoCutAdminPage() {
             </table>
           </div>
         )}
-      </section>
-    </main>
+      </div>
+    </div>
+  );
+
+  return (
+    <AdminLayoutShell activeHref="/tools/hongocut/admin">
+      {PageContent}
+    </AdminLayoutShell>
   );
 }

@@ -1,4 +1,4 @@
-type Tool = "shadowing" | "keigo" | "hongocut";
+type Tool = "shadowing" | "keigo" | "hongocut" | "goipack";
 
 const config: Record<Tool, { label: string; className: string }> = {
   shadowing: {
@@ -12,6 +12,10 @@ const config: Record<Tool, { label: string; className: string }> = {
   hongocut: {
     label: "HongoCut",
     className: "border border-amber-200 bg-amber-50 text-amber-700",
+  },
+  goipack: {
+    label: "GoiPack",
+    className: "border border-sky-200 bg-sky-50 text-sky-700",
   },
 };
 

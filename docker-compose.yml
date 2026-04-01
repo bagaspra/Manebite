@@ -30,20 +30,22 @@ services:
       - ./backend/.env
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000
     restart: unless-stopped
     ports:
       - "3000:3000"
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     env_file:
       - ./frontend/.env
     environment:
       - API_URL=http://backend:8000
       - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXTAUTH_URL=http://localhost:3000
+      - AUTH_URL=http://localhost:3000
 
 volumes:
   postgres_data:

@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.database import engine, Base
-from app.routers import videos, session, auth, proxy, keigo, hongocut
+from app.routers import videos, session, auth, proxy, keigo, hongocut, goipack
 
 # Import all models so Base.metadata knows about them
 import app.models.video  # noqa: F401
@@ -14,6 +14,9 @@ import app.models.user_progress  # noqa: F401
 import app.models.user  # noqa: F401
 import app.models.keigo_history  # noqa: F401
 import app.models.hc_word  # noqa: F401
+import app.models.goi_category  # noqa: F401
+import app.models.goi_pack  # noqa: F401
+import app.models.goi_word  # noqa: F401
 
 
 @asynccontextmanager
@@ -36,7 +39,8 @@ app.add_middleware(
     allow_origins=settings.allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*", "X-User-Id"],
+    expose_headers=["*"],
 )
 
 
@@ -46,6 +50,7 @@ app.include_router(session.router)
 app.include_router(proxy.router)
 app.include_router(keigo.router, prefix="/keigo")
 app.include_router(hongocut.router)
+app.include_router(goipack.router)
 
 
 @app.get("/health")

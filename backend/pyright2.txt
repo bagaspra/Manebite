@@ -1,0 +1,196 @@
+﻿d:\Portofolio\Manebun\shadowing-queue\backend\app\database.py
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\database.py:20:23 - error: Return type of async generator function must be compatible with "AsyncGenerator[Any, Any]"
+  ﾂﾂ"AsyncGenerator[Any, Any, Any]" is not assignable to "AsyncSession" (reportInvalidTypeForm)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\database.py:22:15 - error: Return type of async generator function must be compatible with "AsyncGenerator[AsyncSession, Any]"
+  ﾂﾂ"AsyncGenerator[AsyncSession, Unknown, Unknown]" is not assignable to "AsyncSession" (reportReturnType)
+d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\auth.py
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\auth.py:48:24 - error: Invalid conditional operand of type "Column[str]"
+  ﾂﾂMethod __bool__ for type "Column[str]" returns type "NoReturn" rather than "bool" (reportGeneralTypeIssues)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\auth.py:51:41 - error: Argument of type "Column[str]" cannot be assigned to parameter "hashed" of type "str" in function "_verify"
+  ﾂﾂ"Column[str]" is not assignable to "str" (reportArgumentType)
+d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:53:41 - error: No overloads for "get" match the provided arguments (reportCallIssue)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:53:60 - error: Argument of type "Column[int]" cannot be assigned to parameter "key" of type "int" in function "get"
+  ﾂﾂ"Column[int]" is not assignable to "int" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:58:12 - error: Argument of type "Column[int]" cannot be assigned to parameter "id" of type "int" in function "__init__"
+  ﾂﾂ"Column[int]" is not assignable to "int" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:59:17 - error: Argument of type "Column[str]" cannot be assigned to parameter "surface" of type "str" in function "__init__"
+  ﾂﾂ"Column[str]" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:60:17 - error: Argument of type "Column[str]" cannot be assigned to parameter "reading" of type "str" in function "__init__"
+  ﾂﾂ"Column[str]" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:61:20 - error: Argument of type "Column[int]" cannot be assigned to parameter "jlpt_level" of type "int" in function "__init__"
+  ﾂﾂ"Column[int]" is not assignable to "int" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:62:20 - error: Argument of type "Column[str]" cannot be assigned to parameter "meaning_en" of type "str" in function "__init__"
+  ﾂﾂ"Column[str]" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:63:20 - error: Argument of type "Column[str]" cannot be assigned to parameter "meaning_id" of type "str" in function "__init__"
+  ﾂﾂ"Column[str]" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:64:21 - error: Argument of type "Column[Any] | list[str]" cannot be assigned to parameter "examples_ja" of type "list[str]" in function "__init__"
+  ﾂﾂType "Column[Any] | list[str]" is not assignable to type "list[str]"
+  ﾂﾂﾂﾂ"Column[Any]" is not assignable to "list[str]" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:65:26 - error: Argument of type "Column[Any] | None" cannot be assigned to parameter "examples_ja_ruby" of type "list[str] | None" in function "__init__"
+  ﾂﾂType "Column[Any] | None" is not assignable to type "list[str] | None"
+  ﾂﾂﾂﾂType "Column[Any]" is not assignable to type "list[str] | None"
+  ﾂﾂﾂﾂﾂﾂ"Column[Any]" is not assignable to "list[str]"
+  ﾂﾂﾂﾂﾂﾂ"Column[Any]" is not assignable to "None" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:66:21 - error: Argument of type "Column[Any] | list[str]" cannot be assigned to parameter "examples_en" of type "list[str]" in function "__init__"
+  ﾂﾂType "Column[Any] | list[str]" is not assignable to type "list[str]"
+  ﾂﾂﾂﾂ"Column[Any]" is not assignable to "list[str]" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:67:21 - error: Argument of type "Column[Any] | list[str]" cannot be assigned to parameter "examples_id" of type "list[str]" in function "__init__"
+  ﾂﾂType "Column[Any] | list[str]" is not assignable to type "list[str]"
+  ﾂﾂﾂﾂ"Column[Any]" is not assignable to "list[str]" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:68:20 - error: Argument of type "Column[int]" cannot be assigned to parameter "sort_order" of type "int" in function "__init__"
+  ﾂﾂ"Column[int]" is not assignable to "int" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:74:12 - error: Argument of type "Column[int]" cannot be assigned to parameter "id" of type "int" in function "__init__"
+  ﾂﾂ"Column[int]" is not assignable to "int" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:75:21 - error: Argument of type "Column[int]" cannot be assigned to parameter "category_id" of type "int" in function "__init__"
+  ﾂﾂ"Column[int]" is not assignable to "int" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:76:17 - error: Argument of type "Column[str]" cannot be assigned to parameter "name_ja" of type "str" in function "__init__"
+  ﾂﾂ"Column[str]" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:77:17 - error: Argument of type "Column[str]" cannot be assigned to parameter "name_en" of type "str" in function "__init__"
+  ﾂﾂ"Column[str]" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:78:17 - error: Argument of type "Column[str]" cannot be assigned to parameter "name_id" of type "str" in function "__init__"
+  ﾂﾂ"Column[str]" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:79:21 - error: Argument of type "Column[str]" cannot be assigned to parameter "description" of type "str | None" in function "__init__"
+  ﾂﾂType "Column[str]" is not assignable to type "str | None"
+  ﾂﾂﾂﾂ"Column[str]" is not assignable to "str"
+  ﾂﾂﾂﾂ"Column[str]" is not assignable to "None" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:80:20 - error: Argument of type "Column[int] | Literal[0]" cannot be assigned to parameter "word_count" of type "int" in function "__init__"
+  ﾂﾂType "Column[int] | Literal[0]" is not assignable to type "int"
+  ﾂﾂﾂﾂ"Column[int]" is not assignable to "int" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:81:22 - error: Argument of type "Column[bool] | Literal[False]" cannot be assigned to parameter "is_published" of type "bool" in function "__init__"
+  ﾂﾂType "Column[bool] | Literal[False]" is not assignable to type "bool"
+  ﾂﾂﾂﾂ"Column[bool]" is not assignable to "bool" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:82:48 - error: Invalid conditional operand of type "Column[datetime]"
+  ﾂﾂMethod __bool__ for type "Column[datetime]" returns type "NoReturn" rather than "bool" (reportGeneralTypeIssues)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:104:16 - error: Argument of type "Column[int]" cannot be assigned to parameter "id" of type "int" in function "__init__"
+  ﾂﾂ"Column[int]" is not assignable to "int" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:105:21 - error: Argument of type "Column[str]" cannot be assigned to parameter "name_ja" of type "str" in function "__init__"
+  ﾂﾂ"Column[str]" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:106:21 - error: Argument of type "Column[str]" cannot be assigned to parameter "name_en" of type "str" in function "__init__"
+  ﾂﾂ"Column[str]" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:107:21 - error: Argument of type "Column[str]" cannot be assigned to parameter "name_id" of type "str" in function "__init__"
+  ﾂﾂ"Column[str]" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:108:18 - error: Argument of type "Column[str] | Literal['答']" cannot be assigned to parameter "icon" of type "str" in function "__init__"
+  ﾂﾂType "Column[str] | Literal['答']" is not assignable to type "str"
+  ﾂﾂﾂﾂ"Column[str]" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:109:24 - error: Argument of type "Column[int] | Literal[0]" cannot be assigned to parameter "sort_order" of type "int" in function "__init__"
+  ﾂﾂType "Column[int] | Literal[0]" is not assignable to type "int"
+  ﾂﾂﾂﾂ"Column[int]" is not assignable to "int" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:157:26 - error: Type "Column[int]" is not assignable to declared type "int | None"
+  ﾂﾂType "Column[int]" is not assignable to type "int | None"
+  ﾂﾂﾂﾂ"Column[int]" is not assignable to "int"
+  ﾂﾂﾂﾂ"Column[int]" is not assignable to "None" (reportAssignmentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:365:30 - error: Argument of type "Column[Any] | list[str]" cannot be assigned to parameter "iterable" of type "Iterable[str]" in function "extend"
+  ﾂﾂType "Column[Any] | list[str]" is not assignable to type "Iterable[str]"
+  ﾂﾂﾂﾂ"Column[Any]" is incompatible with protocol "Iterable[str]"
+  ﾂﾂﾂﾂﾂﾂ"__iter__" is not present (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:380:14 - error: Cannot assign to attribute "examples_ja_ruby" for class "GoiWord"
+  ﾂﾂExpression of type "list[str]" cannot be assigned to attribute "examples_ja_ruby" of class "GoiWord"
+  ﾂﾂﾂﾂ"list[str]" is not assignable to "Column[Any]" (reportAttributeAccessIssue)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:401:10 - error: Cannot assign to attribute "name_ja" for class "GoiPack"
+  ﾂﾂExpression of type "str" cannot be assigned to attribute "name_ja" of class "GoiPack"
+  ﾂﾂﾂﾂ"str" is not assignable to "Column[str]" (reportAttributeAccessIssue)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:402:10 - error: Cannot assign to attribute "name_en" for class "GoiPack"
+  ﾂﾂExpression of type "str" cannot be assigned to attribute "name_en" of class "GoiPack"
+  ﾂﾂﾂﾂ"str" is not assignable to "Column[str]" (reportAttributeAccessIssue)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:403:10 - error: Cannot assign to attribute "name_id" for class "GoiPack"
+  ﾂﾂExpression of type "str" cannot be assigned to attribute "name_id" of class "GoiPack"
+  ﾂﾂﾂﾂ"str" is not assignable to "Column[str]" (reportAttributeAccessIssue)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:404:10 - error: Cannot assign to attribute "description" for class "GoiPack"
+  ﾂﾂExpression of type "str | None" cannot be assigned to attribute "description" of class "GoiPack"
+  ﾂﾂﾂﾂType "str | None" is not assignable to type "Column[str]"
+  ﾂﾂﾂﾂﾂﾂ"str" is not assignable to "Column[str]" (reportAttributeAccessIssue)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:412:8 - error: Invalid conditional operand of type "Column[bool]"
+  ﾂﾂMethod __bool__ for type "Column[bool]" returns type "NoReturn" rather than "bool" (reportGeneralTypeIssues)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:413:14 - error: Cannot assign to attribute "word_count" for class "GoiPack"
+  ﾂﾂExpression of type "int" cannot be assigned to attribute "word_count" of class "GoiPack"
+  ﾂﾂﾂﾂ"int" is not assignable to "Column[int]" (reportAttributeAccessIssue)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:434:10 - error: Cannot assign to attribute "is_published" for class "GoiPack"
+  ﾂﾂExpression of type "Literal[True]" cannot be assigned to attribute "is_published" of class "GoiPack"
+  ﾂﾂﾂﾂ"Literal[True]" is not assignable to "Column[bool]" (reportAttributeAccessIssue)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\goipack.py:435:10 - error: Cannot assign to attribute "word_count" for class "GoiPack"
+  ﾂﾂExpression of type "int" cannot be assigned to attribute "word_count" of class "GoiPack"
+  ﾂﾂﾂﾂ"int" is not assignable to "Column[int]" (reportAttributeAccessIssue)
+d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\hongocut.py
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\hongocut.py:141:31 - error: Argument of type "Column[str]" cannot be assigned to parameter "text" of type "str" in function "tokenize"
+  ﾂﾂ"Column[str]" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\hongocut.py:157:12 - error: Argument of type "Column[int]" cannot be assigned to parameter "id" of type "int" in function "__init__"
+  ﾂﾂ"Column[int]" is not assignable to "int" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\hongocut.py:158:20 - error: Argument of type "Column[str]" cannot be assigned to parameter "youtube_id" of type "str" in function "__init__"
+  ﾂﾂ"Column[str]" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\hongocut.py:159:15 - error: Argument of type "Column[str]" cannot be assigned to parameter "title" of type "str | None" in function "__init__"
+  ﾂﾂType "Column[str]" is not assignable to type "str | None"
+  ﾂﾂﾂﾂ"Column[str]" is not assignable to "str"
+  ﾂﾂﾂﾂ"Column[str]" is not assignable to "None" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\hongocut.py:160:17 - error: Argument of type "Column[str]" cannot be assigned to parameter "channel" of type "str | None" in function "__init__"
+  ﾂﾂType "Column[str]" is not assignable to type "str | None"
+  ﾂﾂﾂﾂ"Column[str]" is not assignable to "str"
+  ﾂﾂﾂﾂ"Column[str]" is not assignable to "None" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\hongocut.py:163:20 - error: Argument of type "Column[datetime]" cannot be assigned to parameter "created_at" of type "datetime" in function "__init__"
+  ﾂﾂ"Column[datetime]" is not assignable to "datetime" (reportArgumentType)
+d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\keigo.py
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\keigo.py:115:45 - error: Argument of type "str | None" cannot be assigned to parameter "text" of type "str" in function "_parse_gemini_response"
+  ﾂﾂType "str | None" is not assignable to type "str"
+  ﾂﾂﾂﾂ"None" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\keigo.py:178:55 - error: Invalid conditional operand of type "Column[datetime]"
+  ﾂﾂMethod __bool__ for type "Column[datetime]" returns type "NoReturn" rather than "bool" (reportGeneralTypeIssues)
+d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\session.py
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\session.py:62:18 - error: Cannot assign to attribute "replays" for class "UserProgress"
+  ﾂﾂExpression of type "int" cannot be assigned to attribute "replays" of class "UserProgress"
+  ﾂﾂﾂﾂ"int" is not assignable to "Column[int]" (reportAttributeAccessIssue)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\session.py:63:18 - error: Cannot assign to attribute "completed" for class "UserProgress"
+  ﾂﾂExpression of type "bool" cannot be assigned to attribute "completed" of class "UserProgress"
+  ﾂﾂﾂﾂ"bool" is not assignable to "Column[bool]" (reportAttributeAccessIssue)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\session.py:110:46 - error: Invalid conditional operand of type "Column[bool]"
+  ﾂﾂMethod __bool__ for type "Column[bool]" returns type "NoReturn" rather than "bool" (reportGeneralTypeIssues)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\session.py:115:53 - error: Invalid conditional operand of type "Column[bool]"
+  ﾂﾂMethod __bool__ for type "Column[bool]" returns type "NoReturn" rather than "bool" (reportGeneralTypeIssues)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\session.py:122:13 - error: Argument of type "BinaryExpression[bool] | Literal[True]" cannot be assigned to parameter "whereclause" of type "_ColumnExpressionArgument[bool]" in function "where"
+  ﾂﾂType "BinaryExpression[bool] | Literal[True]" is not assignable to type "_ColumnExpressionArgument[bool]"
+  ﾂﾂﾂﾂType "Literal[True]" is not assignable to type "_ColumnExpressionArgument[bool]"
+  ﾂﾂﾂﾂﾂﾂ"Literal[True]" is not assignable to "ColumnElement[bool]"
+  ﾂﾂﾂﾂﾂﾂ"Literal[True]" is incompatible with protocol "_HasClauseElement[bool]"
+  ﾂﾂﾂﾂﾂﾂﾂﾂ"__clause_element__" is not present
+  ﾂﾂﾂﾂﾂﾂ"Literal[True]" is not assignable to "SQLCoreOperations[bool]"
+  ﾂﾂﾂﾂﾂﾂ"Literal[True]" is not assignable to "ExpressionElementRole[bool]"
+  ﾂﾂﾂﾂﾂﾂ"Literal[True]" is not assignable to "TypedColumnsClauseRole[bool]"
+    ... (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\session.py:131:26 - error: Argument of type "Column[int] | None" cannot be assigned to parameter "last_sentence_id" of type "int | None" in function "__init__"
+  ﾂﾂType "Column[int] | None" is not assignable to type "int | None"
+  ﾂﾂﾂﾂType "Column[int]" is not assignable to type "int | None"
+  ﾂﾂﾂﾂﾂﾂ"Column[int]" is not assignable to "int"
+  ﾂﾂﾂﾂﾂﾂ"Column[int]" is not assignable to "None" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\session.py:136:29 - error: Argument of type "Column[int]" cannot be assigned to parameter "sentence_id" of type "int" in function "__init__"
+  ﾂﾂ"Column[int]" is not assignable to "int" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\session.py:137:25 - error: Argument of type "Column[int]" cannot be assigned to parameter "replays" of type "int" in function "__init__"
+  ﾂﾂ"Column[int]" is not assignable to "int" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\session.py:138:27 - error: Argument of type "Column[bool]" cannot be assigned to parameter "completed" of type "bool" in function "__init__"
+  ﾂﾂ"Column[bool]" is not assignable to "bool" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\session.py:139:28 - error: Argument of type "Column[datetime]" cannot be assigned to parameter "created_at" of type "datetime | None" in function "__init__"
+  ﾂﾂType "Column[datetime]" is not assignable to type "datetime | None"
+  ﾂﾂﾂﾂ"Column[datetime]" is not assignable to "datetime"
+  ﾂﾂﾂﾂ"Column[datetime]" is not assignable to "None" (reportArgumentType)
+d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\videos.py
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\videos.py:200:8 - error: Invalid conditional operand of type "ColumnElement[bool]"
+  ﾂﾂMethod __bool__ for type "ColumnElement[bool]" returns type "NoReturn" rather than "bool" (reportGeneralTypeIssues)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\videos.py:203:11 - error: Cannot assign to attribute "is_public" for class "Video"
+  ﾂﾂExpression of type "bool" cannot be assigned to attribute "is_public" of class "Video"
+  ﾂﾂﾂﾂ"bool" is not assignable to "Column[bool]" (reportAttributeAccessIssue)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\routers\videos.py:224:8 - error: Invalid conditional operand of type "ColumnElement[bool] | Literal[False]"
+  ﾂﾂMethod __bool__ for type "ColumnElement[bool]" returns type "NoReturn" rather than "bool" (reportGeneralTypeIssues)
+d:\Portofolio\Manebun\shadowing-queue\backend\app\services\goipack_service.py
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\services\goipack_service.py:152:41 - error: Argument of type "str | None" cannot be assigned to parameter "text" of type "str" in function "_parse_response"
+  ﾂﾂType "str | None" is not assignable to type "str"
+  ﾂﾂﾂﾂ"None" is not assignable to "str" (reportArgumentType)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\services\goipack_service.py:184:42 - error: Argument of type "str | None" cannot be assigned to parameter "text" of type "str" in function "_parse_string_array"
+  ﾂﾂType "str | None" is not assignable to type "str"
+  ﾂﾂﾂﾂ"None" is not assignable to "str" (reportArgumentType)
+d:\Portofolio\Manebun\shadowing-queue\backend\app\services\romaji_service.py
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\services\romaji_service.py:1:8 - error: Import "pykakasi" could not be resolved (reportMissingImports)
+d:\Portofolio\Manebun\shadowing-queue\backend\app\services\subtitle_service.py
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\services\subtitle_service.py:171:33 - error: "group" is not a known attribute of "None" (reportOptionalMemberAccess)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\services\subtitle_service.py:172:31 - error: "group" is not a known attribute of "None" (reportOptionalMemberAccess)
+d:\Portofolio\Manebun\shadowing-queue\backend\app\services\tokenizer_service.py
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\services\tokenizer_service.py:1:8 - error: Import "unidic_lite" could not be resolved (reportMissingImports)
+  d:\Portofolio\Manebun\shadowing-queue\backend\app\services\tokenizer_service.py:2:8 - error: Import "fugashi" could not be resolved (reportMissingImports)
+71 errors, 0 warnings, 0 informations

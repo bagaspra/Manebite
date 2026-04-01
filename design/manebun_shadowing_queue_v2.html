@@ -1,0 +1,312 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;700&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Plus Jakarta Sans',sans-serif;
+    background:linear-gradient(135deg,#e8e4ff 0%,#f0e8ff 25%,#e4f0ff 55%,#e0f7ef 100%);
+    color:#1A1A2E; overflow-x:hidden; min-height:100vh;
+  }
+  .blob { position:fixed; border-radius:50%; filter:blur(90px); pointer-events:none; z-index:0; }
+  .b1 { width:420px;height:420px;background:#c4b5fd;opacity:.45;top:-100px;left:-80px; }
+  .b2 { width:360px;height:360px;background:#86efac;opacity:.38;top:140px;right:-60px; }
+  .b3 { width:320px;height:320px;background:#93c5fd;opacity:.32;bottom:40px;left:160px; }
+  .b4 { width:240px;height:240px;background:#fde68a;opacity:.38;bottom:-60px;right:80px; }
+
+  /* NAV */
+  nav {
+    position:relative;z-index:20;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 28px;
+  }
+  .logo { display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;color:#1A1A2E;text-decoration:none; }
+  .logo-icon { width:30px;height:30px;background:#1A1A2E;border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-family:'Noto Sans JP',sans-serif;font-size:12px;font-weight:700; }
+
+  .nav-center {
+    display:flex;gap:4px;
+    background:rgba(255,255,255,.45);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.8);
+    border-radius:100px;padding:4px;
+  }
+  .nav-pill {
+    padding:6px 14px;border-radius:100px;
+    font-size:12px;font-weight:600;color:#6B7280;
+    cursor:pointer;transition:all .2s;
+  }
+  .nav-pill.active { background:white;color:#1A1A2E;box-shadow:0 1px 6px rgba(0,0,0,.1); }
+  .nav-pill:hover:not(.active) { color:#374151;background:rgba(255,255,255,.4); }
+
+  .nav-right { display:flex;align-items:center;gap:10px; }
+  .nav-btn { width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.5);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:all .2s; }
+  .nav-btn:hover { background:rgba(255,255,255,.75); }
+  .nav-avatar { width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#60a5fa);display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:700;border:2px solid rgba(255,255,255,.85); }
+
+  /* PAGE WRAP */
+  .page { position:relative;z-index:10;padding:0 28px 28px; }
+
+  /* MAIN GLASS SECTION */
+  .main-section {
+    background:rgba(255,255,255,.38);
+    backdrop-filter:blur(40px) saturate(180%);
+    border:1px solid rgba(255,255,255,.75);
+    border-radius:24px;
+    box-shadow:0 8px 40px rgba(0,0,0,.07),inset 0 1px 0 rgba(255,255,255,.9);
+    overflow:hidden;
+  }
+
+  /* TOOLBAR */
+  .toolbar {
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 22px;
+    border-bottom:1px solid rgba(255,255,255,.5);
+  }
+  .toolbar-left { display:flex;align-items:center;gap:12px; }
+  .tool-icon {
+    width:40px;height:40px;border-radius:12px;
+    background:linear-gradient(135deg,#ede9fe,#dbeafe);
+    border:1px solid rgba(255,255,255,.9);
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;box-shadow:0 2px 8px rgba(0,0,0,.07);
+  }
+  .tool-title { font-size:16px;font-weight:800;color:#1A1A2E;letter-spacing:-.01em; }
+  .tool-sub { font-size:11px;color:#9CA3AF;margin-top:1px; }
+
+  .toolbar-right { display:flex;align-items:center;gap:8px; }
+
+  .tabs {
+    display:flex;gap:2px;
+    background:rgba(255,255,255,.5);padding:4px;
+    border-radius:100px;border:1px solid rgba(255,255,255,.8);
+  }
+  .tab { padding:5px 14px;border-radius:100px;font-size:12px;font-weight:600;color:#6B7280;cursor:pointer;transition:all .2s; }
+  .tab.active { background:white;color:#1A1A2E;box-shadow:0 1px 6px rgba(0,0,0,.1); }
+  .tab:hover:not(.active) { color:#374151;background:rgba(255,255,255,.4); }
+
+  .btn-submit {
+    display:flex;align-items:center;gap:6px;
+    padding:8px 16px;border-radius:100px;
+    background:#1A1A2E;color:white;
+    font-size:12px;font-weight:700;
+    border:none;cursor:pointer;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    transition:all .2s;white-space:nowrap;
+  }
+  .btn-submit:hover { background:#2d2d45;transform:translateY(-1px); }
+
+  /* Submit form */
+  .submit-form {
+    padding:14px 22px;
+    background:rgba(255,255,255,.3);
+    border-bottom:1px solid rgba(255,255,255,.5);
+    display:flex;gap:10px;align-items:center;
+  }
+  .url-input {
+    flex:1;padding:9px 16px;border-radius:100px;
+    background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.9);
+    font-size:12px;font-family:'Plus Jakarta Sans',sans-serif;
+    color:#1A1A2E;outline:none;backdrop-filter:blur(10px);transition:all .2s;
+  }
+  .url-input::placeholder { color:#9CA3AF; }
+  .url-input:focus { background:rgba(255,255,255,.9); }
+  .vis-toggle {
+    display:flex;align-items:center;gap:6px;
+    padding:8px 14px;border-radius:100px;
+    background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.9);
+    font-size:12px;font-weight:600;color:#6B7280;cursor:pointer;white-space:nowrap;
+  }
+  .btn-go { padding:9px 18px;border-radius:100px;background:#1A1A2E;color:white;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap;transition:all .2s; }
+  .btn-go:hover { background:#2d2d45; }
+
+  /* VIDEO GRID */
+  .video-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:18px 22px; }
+
+  .vcard {
+    background:rgba(255,255,255,.55);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.85);
+    border-radius:16px;overflow:hidden;
+    cursor:pointer;
+    transition:all .3s cubic-bezier(.34,1.56,.64,1);
+    box-shadow:0 3px 14px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,1);
+  }
+  .vcard:hover { transform:translateY(-4px);background:rgba(255,255,255,.75);box-shadow:0 10px 32px rgba(0,0,0,.1); }
+
+  .vcard-thumb {
+    width:100%;aspect-ratio:16/9;
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;position:relative;
+  }
+  .play-overlay { position:absolute;inset:0;background:rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s; }
+  .vcard:hover .play-overlay { opacity:1; }
+  .play-btn { width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:13px; }
+
+  .top-badges { position:absolute;top:8px;right:8px;display:flex;gap:4px; }
+  .tbadge { width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.75);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;font-size:10px; }
+
+  .vbody { padding:11px 12px; }
+  .vtitle { font-size:11px;font-weight:700;color:#1A1A2E;line-height:1.4;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+  .vchannel { font-size:10px;color:#9CA3AF;margin-bottom:7px; }
+  .vstats { display:flex;gap:8px;margin-bottom:7px; }
+  .vs { font-size:10px;color:#9CA3AF;font-weight:500; }
+  .vprog { height:3px;border-radius:100px;background:rgba(0,0,0,.06);margin-bottom:9px; }
+  .vpf { height:100%;border-radius:100px;background:linear-gradient(90deg,#a78bfa,#60a5fa); }
+  .vactions { display:flex;gap:6px; }
+  .btn-s { flex:1;padding:6px;border-radius:100px;background:#1A1A2E;color:white;font-size:11px;font-weight:700;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;text-align:center;transition:all .2s; }
+  .btn-s:hover { background:#2d2d45; }
+  .btn-d { width:26px;height:26px;border-radius:50%;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;flex-shrink:0;transition:all .2s; }
+  .btn-d:hover { background:rgba(239,68,68,.2); }
+
+  .vcard-empty {
+    border:1.5px dashed rgba(167,139,250,.4);
+    background:rgba(255,255,255,.2);
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;gap:8px;min-height:180px;
+    border-radius:16px;cursor:pointer;transition:all .2s;
+  }
+  .vcard-empty:hover { background:rgba(255,255,255,.35); }
+  .empty-plus { width:36px;height:36px;border-radius:50%;background:rgba(167,139,250,.15);border:1.5px dashed rgba(167,139,250,.4);display:flex;align-items:center;justify-content:center;font-size:18px;color:rgba(167,139,250,.7); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .main-section { animation:fadeUp .4s .08s ease both; }
+  .vcard:nth-child(1) { animation:fadeUp .35s .14s ease both; }
+  .vcard:nth-child(2) { animation:fadeUp .35s .2s ease both; }
+  .vcard:nth-child(3) { animation:fadeUp .35s .26s ease both; }
+  .vcard:nth-child(4) { animation:fadeUp .35s .32s ease both; }
+  .vcard:nth-child(5) { animation:fadeUp .35s .38s ease both; }
+  .vcard-empty { animation:fadeUp .35s .44s ease both; }
+</style>
+
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="blob b3"></div><div class="blob b4"></div>
+
+<nav>
+  <a class="logo" href="#"><div class="logo-icon">まね</div>Manebite</a>
+  <div class="nav-center">
+    <div class="nav-pill">Home</div>
+    <div class="nav-pill active">Shadowing</div>
+    <div class="nav-pill">Keigo</div>
+    <div class="nav-pill">HongoCut</div>
+    <div class="nav-pill">Goi Pack</div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-btn">🔔</div>
+    <div class="nav-avatar">B</div>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="main-section">
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <div class="tool-icon">🎧</div>
+        <div>
+          <div class="tool-title">Shadowing Queue</div>
+          <div class="tool-sub">Shadow YouTube videos sentence by sentence</div>
+        </div>
+      </div>
+      <div class="toolbar-right">
+        <div class="tabs">
+          <div class="tab active">My Videos</div>
+          <div class="tab">Public Library</div>
+        </div>
+        <button class="btn-submit" onclick="var f=document.getElementById('sf');f.style.display=f.style.display==='none'?'flex':'none'">+ Submit Video</button>
+      </div>
+    </div>
+
+    <!-- Submit form -->
+    <div class="submit-form" id="sf" style="display:none">
+      <input class="url-input" placeholder="Paste YouTube URL here... e.g. https://youtube.com/watch?v=..." />
+      <div class="vis-toggle">🔒 Private</div>
+      <button class="btn-go">Process →</button>
+    </div>
+
+    <!-- Video grid -->
+    <div class="video-grid">
+
+      <div class="vcard">
+        <div class="vcard-thumb" style="background:linear-gradient(135deg,#ddd6fe,#bfdbfe)">
+          📺
+          <div class="top-badges"><div class="tbadge">🔒</div><div class="tbadge">🔖</div></div>
+          <div class="play-overlay"><div class="play-btn">▶</div></div>
+        </div>
+        <div class="vbody">
+          <div class="vtitle">【お悩み】声が可愛くないって言われます。セトカンお悩み相談</div>
+          <div class="vchannel">Setokan Channel / Kanna Seto Official</div>
+          <div class="vstats"><div class="vs">📝 366 sentences</div><div class="vs">⏱ 18 min</div></div>
+          <div class="vprog"><div class="vpf" style="width:32%"></div></div>
+          <div class="vactions"><button class="btn-s">Shadow →</button><div class="btn-d">🗑</div></div>
+        </div>
+      </div>
+
+      <div class="vcard">
+        <div class="vcard-thumb" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0)">
+          📺
+          <div class="top-badges"><div class="tbadge">🌐</div><div class="tbadge">🔖</div></div>
+          <div class="play-overlay"><div class="play-btn">▶</div></div>
+        </div>
+        <div class="vbody">
+          <div class="vtitle">日本語会話 — ビジネス敬語入門 完全ガイド</div>
+          <div class="vchannel">NHK World Japanese</div>
+          <div class="vstats"><div class="vs">📝 124 sentences</div><div class="vs">⏱ 8 min</div></div>
+          <div class="vprog"><div class="vpf" style="width:78%"></div></div>
+          <div class="vactions"><button class="btn-s">Shadow →</button><div class="btn-d">🗑</div></div>
+        </div>
+      </div>
+
+      <div class="vcard">
+        <div class="vcard-thumb" style="background:linear-gradient(135deg,#fef3c7,#fde68a)">
+          📺
+          <div class="top-badges"><div class="tbadge">🔒</div></div>
+          <div class="play-overlay"><div class="play-btn">▶</div></div>
+        </div>
+        <div class="vbody">
+          <div class="vtitle">Japanese Daily Conversations for Beginners — Full Lesson</div>
+          <div class="vchannel">JapanesePod101</div>
+          <div class="vstats"><div class="vs">📝 89 sentences</div><div class="vs">⏱ 12 min</div></div>
+          <div class="vprog"><div class="vpf" style="width:12%"></div></div>
+          <div class="vactions"><button class="btn-s">Shadow →</button><div class="btn-d">🗑</div></div>
+        </div>
+      </div>
+
+      <div class="vcard">
+        <div class="vcard-thumb" style="background:linear-gradient(135deg,#fbcfe8,#fce7f3)">
+          📺
+          <div class="top-badges"><div class="tbadge">🌐</div></div>
+          <div class="play-overlay"><div class="play-btn">▶</div></div>
+        </div>
+        <div class="vbody">
+          <div class="vtitle">JLPT N3 リスニング練習 — 完全版 2024</div>
+          <div class="vchannel">JLPT Sensei</div>
+          <div class="vstats"><div class="vs">📝 201 sentences</div><div class="vs">⏱ 22 min</div></div>
+          <div class="vprog"><div class="vpf" style="width:0%"></div></div>
+          <div class="vactions"><button class="btn-s">Shadow →</button><div class="btn-d">🗑</div></div>
+        </div>
+      </div>
+
+      <div class="vcard">
+        <div class="vcard-thumb" style="background:linear-gradient(135deg,#bfdbfe,#dbeafe)">
+          📺
+          <div class="top-badges"><div class="tbadge">🔒</div><div class="tbadge">🔖</div></div>
+          <div class="play-overlay"><div class="play-btn">▶</div></div>
+        </div>
+        <div class="vbody">
+          <div class="vtitle">東京観光ガイド — ネイティブが教える本当の東京</div>
+          <div class="vchannel">Tokyo Life Channel</div>
+          <div class="vstats"><div class="vs">📝 156 sentences</div><div class="vs">⏱ 14 min</div></div>
+          <div class="vprog"><div class="vpf" style="width:55%"></div></div>
+          <div class="vactions"><button class="btn-s">Shadow →</button><div class="btn-d">🗑</div></div>
+        </div>
+      </div>
+
+      <div class="vcard-empty">
+        <div class="empty-plus">+</div>
+        <div style="font-size:12px;font-weight:600;color:#9CA3AF">Submit a new video</div>
+        <div style="font-size:10px;color:#C4B5FD">Paste a YouTube URL to start</div>
+      </div>
+
+    </div>
+  </div>
+</div>

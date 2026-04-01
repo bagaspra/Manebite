@@ -5,6 +5,7 @@ from pydantic import BaseModel, field_validator
 
 class VideoSubmitRequest(BaseModel):
     youtube_url: str
+    is_public: bool = False
 
     @field_validator("youtube_url")
     @classmethod

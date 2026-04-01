@@ -1,7 +1,7 @@
 import uuid
 
+import bcrypt
 from fastapi import APIRouter, Depends, Header, HTTPException
-from passlib.context import CryptContext
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,15 +11,13 @@ from app.schemas.user import UserCreateRequest, UserOut, OAuthUpsertRequest
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
-_pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 def _hash(password: str) -> str:
-    return _pwd_context.hash(password)
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 
 def _verify(plain: str, hashed: str) -> bool:
-    return _pwd_context.verify(plain, hashed)
+    return bcrypt.checkpw(plain.encode(), hashed.encode())
 
 
 @router.post("/register", response_model=UserOut, status_code=201)

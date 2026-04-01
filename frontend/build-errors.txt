@@ -1,0 +1,44 @@
+﻿   笆ｲ Next.js 15.5.14
+   - Environments: .env.local, .env.production, .env
+
+   Creating an optimized production build ...
+ 笨・Compiled successfully in 17.5s
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/17) ...
+   Generating static pages (4/17) 
+   Generating static pages (8/17) 
+   Generating static pages (12/17) 
+ 笨・Generating static pages (17/17)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+笏・笳・/                                    1.83 kB         111 kB
+笏・笳・/_not-found                            995 B         103 kB
+笏・ﾆ・/api/auth/[...nextauth]                122 B         102 kB
+笏・笳・/dashboard                           5.34 kB         114 kB
+笏・笳・/login                               1.94 kB         111 kB
+笏・笳・/register                            1.62 kB         110 kB
+笏・笳・/settings                            4.78 kB         110 kB
+笏・笳・/tools/goipack                       2.06 kB         108 kB
+笏・ﾆ・/tools/goipack/[categoryId]          2.29 kB         108 kB
+笏・笳・/tools/goipack/admin/categories       3.2 kB         109 kB
+笏・笳・/tools/goipack/admin/packs           5.16 kB         111 kB
+笏・ﾆ・/tools/goipack/pack/[packId]         3.35 kB         112 kB
+笏・笳・/tools/hongocut                      4.04 kB         106 kB
+笏・笳・/tools/hongocut/admin                3.18 kB         109 kB
+笏・笳・/tools/keigo                         3.66 kB         112 kB
+笏・笳・/tools/shadowing                     4.26 kB         113 kB
+笏・笳・/tools/shadowing/library             2.93 kB         109 kB
+笏・ﾆ・/tools/shadowing/session/[id]        7.24 kB         113 kB
+笏・ﾆ・/tools/shadowing/videos/[id]         1.95 kB         108 kB
++ First Load JS shared by all             102 kB
+  笏・chunks/255-38b49df12a94ee57.js         46 kB
+  笏・chunks/4bd1b696-c023c6e3521b1417.js  54.2 kB
+  笏・other shared chunks (total)          2.01 kB
+
+
+笳・ (Static)   prerendered as static content
+ﾆ・ (Dynamic)  server-rendered on demand
+

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { getVideoDetail } from "@/lib/api";
 import VisibilityToggle from "@/components/VisibilityToggle";
+import styles from "@/components/GlassUI.module.css";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -30,136 +31,150 @@ export default async function VideoDetailPage({ params }: Props) {
     ...(video.difficulty ? [{ label: video.difficulty }] : []),
   ];
 
+  const glassCardStyle = {
+    background: "rgba(255,255,255,0.45)",
+    backdropFilter: "blur(20px)",
+    WebkitBackdropFilter: "blur(20px)",
+    border: "1px solid rgba(255,255,255,0.8)",
+    borderRadius: "16px",
+    boxShadow: "0 4px 14px rgba(0,0,0,0.05), inset 0 1px 0 white",
+    overflow: "hidden"
+  };
+
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      {/* Breadcrumb */}
-      <nav className="mb-8 flex items-center gap-2 text-xs text-text-secondary">
-        <Link href="/tools/shadowing" className="hover:underline">
-          My Queue
-        </Link>
-        <span>→</span>
-        <span className="text-text-primary">Video Detail</span>
-      </nav>
+    <div className={styles.page}>
+      <main className={`${styles.mainSection} mx-auto max-w-6xl px-4 py-10 sm:px-6 w-full`} style={{ minHeight: "80vh" }}>
+        {/* Breadcrumb - Pill Style */}
+        <nav className="mb-8 flex items-center gap-2">
+          <Link 
+            href="/tools/shadowing" 
+            className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-gray-600 bg-white/40 backdrop-blur-md rounded-full border border-white/80 hover:bg-white/60 transition-colors"
+          >
+            ← My Queue
+          </Link>
+          <span className="text-gray-400">/</span>
+          <span className="text-gray-800 font-semibold text-sm">Video Detail</span>
+        </nav>
 
-      <div className="grid gap-8 lg:grid-cols-3">
-        {/* Left — 2/3 */}
-        <div className="space-y-6 lg:col-span-2">
-          <div>
-            <h1 className="text-2xl font-medium leading-snug tracking-tight text-text-primary sm:text-3xl">
-              {video.title ?? video.youtube_id}
-            </h1>
-            {video.channel && (
-              <p className="mt-2 text-sm text-text-secondary">{video.channel}</p>
-            )}
-          </div>
+        <div className="grid gap-8 lg:grid-cols-3">
+          {/* Left Column */}
+          <div className="space-y-6 lg:col-span-2">
+            <div>
+              <h1 className="text-3xl font-bold leading-snug tracking-tight text-[#1A1A2E] sm:text-4xl" style={{ letterSpacing: "-0.01em" }}>
+                {video.title ?? video.youtube_id}
+              </h1>
+              {video.channel && (
+                <p className="mt-3 text-sm font-medium text-gray-500">{video.channel}</p>
+              )}
+            </div>
 
-          <div className="flex flex-wrap gap-2">
-            {badges.map((b) => (
+            <div className="flex flex-wrap gap-2 pt-2">
+              {badges.map((b) => (
+                <span
+                  key={b.label}
+                  className="rounded-full border border-white/90 bg-white/50 backdrop-blur-md px-4 py-1.5 text-xs font-semibold text-gray-700 shadow-sm"
+                >
+                  {b.label}
+                </span>
+              ))}
               <span
-                key={b.label}
-                className="rounded-full border border-app-border bg-gray-50 px-3 py-1 text-xs text-text-secondary"
+                className={`rounded-full border px-4 py-1.5 text-xs font-semibold backdrop-blur-md shadow-sm ${
+                  video.is_public
+                    ? "border-emerald-200 bg-emerald-100/60 text-emerald-800"
+                    : "border-gray-200 bg-gray-100/60 text-gray-600"
+                }`}
               >
-                {b.label}
+                {video.is_public ? "Public" : "Private"}
               </span>
-            ))}
-            <span
-              className={`rounded-full border px-3 py-1 text-xs ${
-                video.is_public
-                  ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                  : "border-app-border bg-gray-50 text-text-secondary"
-              }`}
-            >
-              {video.is_public ? "Public" : "Private"}
-            </span>
-          </div>
+            </div>
 
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href={`/tools/shadowing/session/${video.id}`}
-              className="rounded-md bg-gray-900 px-6 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-80"
-            >
-              Start Shadowing →
-            </Link>
-            <Link
-              href="/tools/shadowing"
-              className="rounded-md border border-app-border px-6 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-gray-50"
-            >
-              ← Back
-            </Link>
-          </div>
-        </div>
-
-        {/* Right — 1/3 */}
-        <div className="space-y-4 lg:col-span-1">
-          <div className="overflow-hidden rounded-lg border border-app-border shadow-sm">
-            <div className="relative aspect-video">
-              <iframe
-                src={`https://www.youtube.com/embed/${video.youtube_id}`}
-                title={video.title ?? video.youtube_id}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute inset-0 h-full w-full"
-              />
+            <div className="flex flex-wrap gap-3 pt-6">
+              <Link
+                href={`/tools/shadowing/session/${video.id}`}
+                className="flex items-center gap-2 rounded-full bg-[#1A1A2E] px-8 py-3 text-sm font-bold text-white transition-all hover:-translate-y-1 shadow-lg hover:shadow-xl hover:bg-[#2d2d45]"
+              >
+                <span>▶ Start Shadowing</span>
+              </Link>
             </div>
           </div>
 
-          {isOwner && (
-            <VisibilityToggle
-              videoId={video.id}
-              initialIsPublic={video.is_public ?? false}
-              userId={userId}
-            />
-          )}
-        </div>
-      </div>
+          {/* Right Column (Video & Toggles) */}
+          <div className="space-y-4 lg:col-span-1">
+            <div style={glassCardStyle}>
+              <div className="relative aspect-video">
+                <iframe
+                  src={`https://www.youtube.com/embed/${video.youtube_id}`}
+                  title={video.title ?? video.youtube_id}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 h-full w-full"
+                />
+              </div>
+            </div>
 
-      {preview.length > 0 && (
-        <section className="mt-12">
-          <p className="mb-5 text-xs tracking-widest text-text-secondary uppercase">
-            Preview — First 5 Sentences
-          </p>
-
-          <div className="overflow-hidden rounded-lg border border-app-border bg-surface">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-app-border text-xs tracking-wider text-text-secondary uppercase">
-                  <th className="w-8 px-4 py-3 text-left">#</th>
-                  <th className="px-4 py-3 text-left">Japanese</th>
-                  <th className="hidden px-4 py-3 text-left sm:table-cell">Romaji</th>
-                  <th className="w-20 px-4 py-3 text-right">Duration</th>
-                </tr>
-              </thead>
-              <tbody>
-                {preview.map((s, i) => (
-                  <tr key={s.id} className="border-b border-app-border last:border-0">
-                    <td className="px-4 py-3 font-mono text-xs text-text-secondary">
-                      {s.sequence_no ?? i + 1}
-                    </td>
-                    <td
-                      className="px-4 py-3 font-medium text-text-primary"
-                      style={{ fontFamily: "var(--font-noto-sans-jp), 'Noto Sans JP', sans-serif" }}
-                    >
-                      {s.text_ja}
-                    </td>
-                    <td className="hidden px-4 py-3 text-text-secondary sm:table-cell">
-                      {s.text_romaji ?? "—"}
-                    </td>
-                    <td className="px-4 py-3 text-right font-mono text-xs text-text-secondary">
-                      {s.duration != null ? `${s.duration.toFixed(1)}s` : "—"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            {isOwner && (
+              <div style={{ ...glassCardStyle, padding: "4px" }}>
+                <VisibilityToggle
+                  videoId={video.id}
+                  initialIsPublic={video.is_public ?? false}
+                  userId={userId}
+                />
+              </div>
+            )}
           </div>
+        </div>
 
-          {video.sentence_count > 5 && (
-            <p className="mt-3 text-xs text-text-secondary">
-              … and {video.sentence_count - 5} more sentences in the full session.
-            </p>
-          )}
-        </section>
-      )}
-    </main>
+        {/* Data Table Preview */}
+        {preview.length > 0 && (
+          <section className="mt-14" style={{ ...glassCardStyle, borderRadius: "20px" }}>
+            <div className="bg-white/20 px-6 py-4 border-b border-white/40">
+              <h2 className="text-sm font-bold text-[#1A1A2E] uppercase tracking-widest flex items-center gap-2">
+                <span className="text-purple-500">❖</span> Preview (First 5 sentences)
+              </h2>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-white/40 text-xs tracking-wider text-gray-500 uppercase bg-white/10">
+                    <th className="w-12 px-6 py-4 text-left font-bold">#</th>
+                    <th className="px-6 py-4 text-left font-bold">Japanese</th>
+                    <th className="hidden px-6 py-4 text-left sm:table-cell font-bold">Romaji</th>
+                    <th className="w-24 px-6 py-4 text-right font-bold">Duration</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/40">
+                  {preview.map((s, i) => (
+                    <tr key={s.id} className="transition-colors hover:bg-white/30">
+                      <td className="px-6 py-4 font-mono text-xs font-semibold text-gray-400">
+                        {s.sequence_no ?? i + 1}
+                      </td>
+                      <td
+                        className="px-6 py-4 font-medium text-[#1A1A2E] leading-relaxed"
+                        style={{ fontFamily: "'Inter', var(--font-noto-sans-jp), sans-serif" }}
+                      >
+                        {s.text_ja}
+                      </td>
+                      <td className="hidden px-6 py-4 text-gray-500 sm:table-cell font-medium">
+                        {s.text_romaji ?? "—"}
+                      </td>
+                      <td className="px-6 py-4 text-right font-mono text-xs font-semibold text-gray-500">
+                        {s.duration != null ? `${s.duration.toFixed(1)}s` : "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {video.sentence_count > 5 && (
+              <div className="bg-white/10 px-6 py-3 border-t border-white/40 text-center text-xs font-semibold text-gray-500">
+                … and {video.sentence_count - 5} more sentences locked in the full session
+              </div>
+            )}
+          </section>
+        )}
+      </main>
+    </div>
   );
 }

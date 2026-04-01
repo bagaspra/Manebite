@@ -168,6 +168,8 @@ def parse_vtt(vtt_path: str) -> list[dict]:
             continue
 
         m = _TS_RE.match(lines[ts_line_idx])
+        if not m:
+            continue
         start_time = parse_ts(m.group(1))
         end_time = parse_ts(m.group(2))
 

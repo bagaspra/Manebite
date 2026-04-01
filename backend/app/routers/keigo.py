@@ -112,6 +112,8 @@ async def translate(
                 contents=f"{SYSTEM_PROMPT}\n\n{prompt}",
                 config=types.GenerateContentConfig(temperature=0.3),
             )
+            if not response.text:
+                raise ValueError("Empty response text from Gemini")
             parsed = _parse_gemini_response(response.text)
             break
         except (json.JSONDecodeError, ValueError) as e:
