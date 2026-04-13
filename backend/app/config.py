@@ -3,6 +3,18 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+asyncpg://shadowing:shadowing@postgres:5432/shadowing_queue"
+
+    @property
+    def async_database_url(self) -> str:
+        url = self.DATABASE_URL
+        # Normalize driver: replace postgresql:// or postgresql+psycopg2:// with asyncpg
+        if url.startswith("postgresql://"):
+            url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        elif url.startswith("postgresql+psycopg2://"):
+            url = url.replace("postgresql+psycopg2://", "postgresql+asyncpg://", 1)
+        # Normalize SSL param: asyncpg uses ?ssl=require, not ?sslmode=require
+        url = url.replace("sslmode=require", "ssl=require")
+        return url
     FRONTEND_URL: str = "http://localhost:3000"
     ENVIRONMENT: str = "development"
     GEMINI_API_KEY: str = ""
