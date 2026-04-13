@@ -1,3 +1,5 @@
+from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
+
 from pydantic_settings import BaseSettings
 
 
@@ -7,14 +9,27 @@ class Settings(BaseSettings):
     @property
     def async_database_url(self) -> str:
         url = self.DATABASE_URL
-        # Normalize driver: replace postgresql:// or postgresql+psycopg2:// with asyncpg
+        # Normalize driver scheme to asyncpg
         if url.startswith("postgresql://"):
             url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
         elif url.startswith("postgresql+psycopg2://"):
             url = url.replace("postgresql+psycopg2://", "postgresql+asyncpg://", 1)
-        # Normalize SSL param: asyncpg uses ?ssl=require, not ?sslmode=require
-        url = url.replace("sslmode=require", "ssl=require")
-        return url
+
+        # Filter query params: asyncpg doesn't support libpq-style params like
+        # channel_binding, sslmode, gssencmode. Convert sslmode=require to ssl=true.
+        parsed = urlparse(url)
+        params = parse_qsl(parsed.query, keep_blank_values=True)
+        filtered = []
+        for key, value in params:
+            if key in ("channel_binding", "gssencmode"):
+                continue
+            if key == "sslmode":
+                if value in ("require", "verify-ca", "verify-full"):
+                    filtered.append(("ssl", "true"))
+                continue
+            filtered.append((key, value))
+        new_query = urlencode(filtered)
+        return urlunparse(parsed._replace(query=new_query))
     FRONTEND_URL: str = "http://localhost:3000"
     ENVIRONMENT: str = "development"
     GEMINI_API_KEY: str = ""
