@@ -15,12 +15,21 @@ class Settings(BaseSettings):
         elif url.startswith("postgresql+psycopg2://"):
             url = url.replace("postgresql+psycopg2://", "postgresql+asyncpg://", 1)
 
-        # Strip query params that asyncpg doesn't support (libpq-only params).
-        # Keep sslmode as-is — asyncpg accepts it with values: disable, allow,
-        # prefer, require, verify-ca, verify-full.
+        # asyncpg doesn't accept libpq params (channel_binding, gssencmode, sslmode).
+        # SQLAlchemy's asyncpg dialect uses `ssl` (not `sslmode`) in the URL.
         parsed = urlparse(url)
         params = parse_qsl(parsed.query, keep_blank_values=True)
-        filtered = [(k, v) for k, v in params if k not in ("channel_binding", "gssencmode")]
+        filtered = []
+        for key, value in params:
+            if key in ("channel_binding", "gssencmode"):
+                continue
+            if key == "sslmode":
+                # Convert libpq sslmode to asyncpg ssl param
+                if value in ("require", "verify-ca", "verify-full"):
+                    filtered.append(("ssl", "require"))
+                # disable/allow/prefer → no ssl
+                continue
+            filtered.append((key, value))
         new_query = urlencode(filtered)
         return urlunparse(parsed._replace(query=new_query))
     FRONTEND_URL: str = "http://localhost:3000"
