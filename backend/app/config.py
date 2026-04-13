@@ -15,19 +15,12 @@ class Settings(BaseSettings):
         elif url.startswith("postgresql+psycopg2://"):
             url = url.replace("postgresql+psycopg2://", "postgresql+asyncpg://", 1)
 
-        # Filter query params: asyncpg doesn't support libpq-style params like
-        # channel_binding, sslmode, gssencmode. Convert sslmode=require to ssl=true.
+        # Strip query params that asyncpg doesn't support (libpq-only params).
+        # Keep sslmode as-is — asyncpg accepts it with values: disable, allow,
+        # prefer, require, verify-ca, verify-full.
         parsed = urlparse(url)
         params = parse_qsl(parsed.query, keep_blank_values=True)
-        filtered = []
-        for key, value in params:
-            if key in ("channel_binding", "gssencmode"):
-                continue
-            if key == "sslmode":
-                if value in ("require", "verify-ca", "verify-full"):
-                    filtered.append(("ssl", "true"))
-                continue
-            filtered.append((key, value))
+        filtered = [(k, v) for k, v in params if k not in ("channel_binding", "gssencmode")]
         new_query = urlencode(filtered)
         return urlunparse(parsed._replace(query=new_query))
     FRONTEND_URL: str = "http://localhost:3000"
