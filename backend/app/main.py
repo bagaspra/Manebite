@@ -4,7 +4,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.database import engine, Base
 from app.routers import videos, session, auth, proxy, keigo, hongocut, goipack
 
 # Import all models so Base.metadata knows about them
@@ -21,10 +20,6 @@ import app.models.goi_word  # noqa: F401
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Dev convenience: create tables if they don't exist.
-    # In production this is replaced by Alembic migrations.
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
     yield
 
 
